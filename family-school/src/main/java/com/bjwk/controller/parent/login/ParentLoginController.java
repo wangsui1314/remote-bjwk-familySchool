@@ -22,7 +22,7 @@ import com.bjwk.service.parent.login.ParentLoginService;
 @RequestMapping("parentLogin")
 public class ParentLoginController {
 	
-	private Log _logger = LogFactory.getLog(ParentLoginController.class);
+	private static final Log _logger = LogFactory.getLog(ParentLoginController.class);
 	
 	@Autowired
 	private ParentLoginService parentLoginService;

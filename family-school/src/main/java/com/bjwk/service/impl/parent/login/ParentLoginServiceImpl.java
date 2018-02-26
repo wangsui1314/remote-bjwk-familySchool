@@ -14,7 +14,7 @@ import com.bjwk.service.parent.login.ParentLoginService;
 */
 public class ParentLoginServiceImpl implements ParentLoginService {
 	
-	private Log _logger = LogFactory.getLog(ParentLoginServiceImpl.class);
+	private static final Log _logger = LogFactory.getLog(ParentLoginServiceImpl.class);
 	
 	/**
 	 * 校验家长端登录

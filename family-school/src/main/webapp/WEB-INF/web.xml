@@ -35,7 +35,7 @@
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
-	
+
 	<!-- 监听http对象 -->
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
@@ -53,10 +53,23 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	<!-- 防止springMVC框架返回json时和html冲突报 406 错误 -->
 	<servlet-mapping>
 		<servlet-name>rest</servlet-name>
 		<url-pattern>*.html</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>rest</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>rest</servlet-name>
+		<url-pattern>/service/*</url-pattern>
+	</servlet-mapping>
+
+
 	<!-- 配置session超时时间，单位分钟 -->
 	<session-config>
 		<session-timeout>10</session-timeout>

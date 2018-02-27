@@ -56,7 +56,7 @@ public class RedisClient {
             /*jedisPool = new JedisPool(config, "www.liqitian.top",
             		6379,
             		10000,"123");*/
-            jedisPool = new JedisPool(config, "localhost",
+            jedisPool = new JedisPool(config, "www.liqitian.top",
             		6379,
             		10000,"123");
             

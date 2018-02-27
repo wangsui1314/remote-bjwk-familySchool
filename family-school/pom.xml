@@ -7,13 +7,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rkbao-notar Maven Webapp</name>
 	<url>http://maven.apache.org</url>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.1.4.RELEASE</spring.version>
 		<jackson.version>2.5.0</jackson.version>
 	</properties>
-	
+
 	<dependencies>
 		<!-- spring -->
 		<dependency>
@@ -64,7 +64,12 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
-
+		<!-- //responseBody -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.4.2</version>
+		</dependency>
 		<!-- mybatis 包 -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -98,7 +103,7 @@
 			<artifactId>aspectjweaver</artifactId>
 			<version>1.8.4</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
 		<!-- redis -->
 		<dependency>
@@ -115,11 +120,8 @@
 		</dependency>
 
 		<!-- servlet -->
-		 <!-- <dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>3.0-alpha-1</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
+			<version>3.0-alpha-1</version> </dependency> -->
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -157,7 +159,7 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
-		
+
 		<!-- HttpGet/HttpPost请求 -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -169,7 +171,7 @@
 			<artifactId>httpcore</artifactId>
 			<version>4.4.6</version>
 		</dependency>
-		
+
 		<!-- 文件上传 -->
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -186,10 +188,10 @@
 	</dependencies>
 	<build>
 		<finalName>family-school</finalName>
-		
+
 		<plugins>
-				<!-- path 是访问应用的路径 port 是tomcat 的端口号 uriEncoding URL按UTF-8进行编码，这样就解决了中文参数乱码。 
-					Server 指定tomcat名称。 -->
+			<!-- path 是访问应用的路径 port 是tomcat 的端口号 uriEncoding URL按UTF-8进行编码，这样就解决了中文参数乱码。 
+				Server 指定tomcat名称。 -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
@@ -199,7 +201,7 @@
 					<path>/</path>
 				</configuration>
 			</plugin>
-			
+
 		</plugins>
 		<resources>
 			<resource>

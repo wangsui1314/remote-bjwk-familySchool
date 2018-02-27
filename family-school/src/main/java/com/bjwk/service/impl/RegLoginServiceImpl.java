@@ -22,6 +22,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	@Override
 	public DataWrapper<Users> reg(Users user) {
 		// TODO Auto-generated method stub
+		System.out.println(123);
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
 		/** 
 		 * 判断账号是否存在
@@ -36,20 +37,18 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		if(regLoginDao.reg(user)!=0){
 			Jedis jedis=null;
 			String token=null;
-			try {
+			
 				jedis=RedisClient.getInstance().getJedis();
 				//为当前注册成功的用户分配一个token，放在redis中
 				token =(int)((Math.random()*9+1)*100000)+"";
 				jedis.hset("loginStatus", token, "");
-			} finally {
-				// TODO: handle finally clause
-				if(jedis!=null)
 				jedis.close();
-			}
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 			dataWrapper.setData(user);
 			dataWrapper.setMsg(token);
+			System.out.println(dataWrapper);
 		}
+		
 		return dataWrapper;
 	}
 

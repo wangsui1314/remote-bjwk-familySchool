@@ -88,7 +88,7 @@
 	<!-- Spring aop事务管理 -->
 	<aop:config>
 		<aop:pointcut id="transactionPointcut"
-			expression="execution(* com.bjwk.service..*Impl.*(..))" />
+			expression="execution(* com.bjwk.service..*impl.*(..))" />
 		<!-- 切入到我们的service层 -->
 		<aop:advisor pointcut-ref="transactionPointcut"
 			advice-ref="transactionAdvice" />

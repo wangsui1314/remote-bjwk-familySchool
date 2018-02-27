@@ -35,7 +35,7 @@ public class RegLoginController {
 	public DataWrapper<Users> reg(
 			@ModelAttribute(value="user") Users user
 			){
-		
+		System.out.println(123);
 		return regLoginService.reg(user);
 	}
 	/**

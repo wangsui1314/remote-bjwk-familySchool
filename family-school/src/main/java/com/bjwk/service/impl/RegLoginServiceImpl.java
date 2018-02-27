@@ -43,6 +43,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 				jedis.hset("loginStatus", token, "");
 			} finally {
 				// TODO: handle finally clause
+				if(jedis!=null)
 				jedis.close();
 			}
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);

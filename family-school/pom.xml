@@ -107,11 +107,11 @@
 		</dependency>
 
 		<!-- servlet -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>3.0-alpha-1</version>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -180,19 +180,18 @@
 		<finalName>family-school</finalName>
 		
 		<plugins>
+				<!-- path 是访问应用的路径 port 是tomcat 的端口号 uriEncoding URL按UTF-8进行编码，这样就解决了中文参数乱码。 
+					Server 指定tomcat名称。 -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
 				<configuration>
-					<port>9090</port>
-					<path>/family-school</path>
-					<uriEncoding>UTF-8</uriEncoding>
-					<server>tomcat7</server>
+					<port>8080</port>
+					<path>/</path>
 				</configuration>
-				<!-- path 是访问应用的路径 port 是tomcat 的端口号 uriEncoding URL按UTF-8进行编码，这样就解决了中文参数乱码。 
-					Server 指定tomcat名称。 -->
 			</plugin>
+			
 		</plugins>
 		<resources>
 			<resource>

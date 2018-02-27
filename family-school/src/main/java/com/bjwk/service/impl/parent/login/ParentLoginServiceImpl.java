@@ -2,6 +2,7 @@ package com.bjwk.service.impl.parent.login;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
 
 import com.bjwk.service.parent.login.ParentLoginService;
 
@@ -12,6 +13,7 @@ import com.bjwk.service.parent.login.ParentLoginService;
 * @date 创建时间：2018年2月26日 下午8:44:19 
 * @version 1.0  
 */
+@Service
 public class ParentLoginServiceImpl implements ParentLoginService {
 	
 	private static final Log _logger = LogFactory.getLog(ParentLoginServiceImpl.class);

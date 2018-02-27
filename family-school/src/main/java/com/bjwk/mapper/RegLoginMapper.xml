@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjwk.dao.RegLoginDao">
+    
+    
+    <insert id="reg">
+      insert into users(user_name,pass_word,email,sign,created) values(#{userName},#{passWord},#{email},sign,now())
+    </insert>
+    
+    <select id="queryUserIsTrue" resultType="String">
+     select user_name from users  where user_name =#{userName}
+    </select>
+    
+    
+    <select id="queryPassWordIsOk" resultType="com.bjwk.model.pojo.Users">
+     select * from user where user_name =#{userName} and pass_word=#{passWord}
+    </select>
+</mapper>       

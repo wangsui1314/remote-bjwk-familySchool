@@ -15,6 +15,6 @@
     
     
     <select id="queryPassWordIsOk" resultType="com.bjwk.model.pojo.Users">
-     select * from user where user_name =#{userName} and pass_word=#{passWord}
+     select * from users where user_name =#{userName} and pass_word=#{passWord}
     </select>
 </mapper>       

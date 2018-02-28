@@ -39,7 +39,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 				jedis=RedisClient.getInstance().getJedis();
 				//为当前注册成功的用户分配一个token，放在redis中
 				token =(int)((Math.random()*9+1)*100000)+"";
-				jedis.hset("loginStatus", token, "");
+				jedis.hset("loginStatus", token, user.getUserName());
 				jedis.close();
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 			dataWrapper.setData(user);
@@ -67,7 +67,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			try {
 				//为当前注册成功的用户分配一个token，放在redis中
 				token =(int)((Math.random()*9+1)*100000)+"";
-				jedis.hset("loginStatus", token, "");
+				jedis.hset("loginStatus", token, userName);
 			} finally {
 				if(jedis != null){
 					jedis.close();

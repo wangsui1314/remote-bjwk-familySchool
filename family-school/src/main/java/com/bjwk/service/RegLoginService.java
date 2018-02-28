@@ -5,7 +5,7 @@ import com.bjwk.utils.DataWrapper;
 
 public interface RegLoginService {
 
-	DataWrapper<Users> reg(Users user);
+	DataWrapper<Users> insertReg(Users user);
 
 	DataWrapper<Users> login(String userName, String passWord);
 

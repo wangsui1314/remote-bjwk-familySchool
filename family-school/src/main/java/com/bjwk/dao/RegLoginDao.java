@@ -7,7 +7,7 @@ import com.bjwk.model.pojo.Users;
 @Component
 public interface RegLoginDao {
 
-	int reg(Users user);
+	int insertReg(Users user);
     String queryUserIsTrue(String userName);
     
     

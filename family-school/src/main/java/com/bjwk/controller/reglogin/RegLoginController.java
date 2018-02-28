@@ -21,7 +21,7 @@ import com.bjwk.utils.DataWrapper;
  * @version 1.0
  */
 @Controller
-@RequestMapping("user/regLogin")
+@RequestMapping("api/regLogin")
 public class RegLoginController {
 	
 	private static final Log _logger = LogFactory.getLog(RegLoginController.class);
@@ -36,15 +36,14 @@ public class RegLoginController {
 	 */
 	@RequestMapping(value="_reg")
 	@ResponseBody
-	public DataWrapper<Users> reg(@ModelAttribute(value="user") Users user){
+	public DataWrapper<Users> insertReg(@ModelAttribute(value="user") Users user){
 		
 		_logger.info("进入用户注册....");
 		
-		return regLoginService.reg(user);
+		return regLoginService.insertReg(user);
 	}
 	
 	/**
-	 * 
 	 * @param user
 	 * @return
 	 * @describe 账号密码用户登录
@@ -71,6 +70,21 @@ public class RegLoginController {
 	public DataWrapper<Void> logout(
 			@RequestParam(value="token",required=true)String token
 			){
+		_logger.info("用户登出...");
 		return regLoginService.logout(token);
+	}
+	
+	/**
+	 *
+	 * @param user
+	 * @return
+	 * @describe 管理员修改用户
+	 */
+	@RequestMapping(value="_updateUser")
+	@ResponseBody
+	public DataWrapper<Void> _updateUser(
+			@RequestParam(value="token",required=true)String token
+			){
+		return null;
 	}
 }

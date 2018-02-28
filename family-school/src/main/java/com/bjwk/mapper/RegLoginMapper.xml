@@ -5,7 +5,7 @@
 <mapper namespace="com.bjwk.dao.RegLoginDao">
     
     
-    <insert id="reg">
+    <insert id="insertReg">
       insert into users(user_name,pass_word,email,sign,created) values(#{userName},#{passWord},#{email},sign,now())
     </insert>
     
@@ -14,7 +14,17 @@
     </select>
     
     
-    <select id="queryPassWordIsOk" resultType="com.bjwk.model.pojo.Users">
+    <resultMap type="com.bjwk.model.pojo.Users" id="queryPassWordIsOk">
+        <id column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="pass_word" property="passWord"/>
+        <result column="eamil" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="sign" property="sign"/>
+        <result column="created" property="created"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <select id="queryPassWordIsOk" resultMap="queryPassWordIsOk">
      select * from users where user_name =#{userName} and pass_word=#{passWord}
     </select>
 </mapper>       

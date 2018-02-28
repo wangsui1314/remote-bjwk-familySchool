@@ -1,12 +1,36 @@
 package com.bjwk.model.pojo;
 
 public class Users {
-  
+    
+	private Integer userId;
 	private String userName; 
 	private  String passWord; 
+	private String phone;
 	private String email; 
 	private String sign;
 	private String created;
+	private String updateTime;
+
+	
+	
+	public Integer getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
 	public String getUserName() {
 		return userName;
 	}

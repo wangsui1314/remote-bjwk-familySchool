@@ -18,10 +18,8 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	@Autowired
 	private RegLoginDao regLoginDao;
 
-
-	@Override
+	
 	public DataWrapper<Users> reg(Users user) {
-		// TODO Auto-generated method stub
 		System.out.println(123);
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
 		/** 
@@ -53,9 +51,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	}
 
 
-	@Override
 	public DataWrapper<Users> login(String userName, String passWord) {
-		// TODO Auto-generated method stub
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
 		Jedis  jedis=RedisClient.getInstance().getJedis();
 		
@@ -73,8 +69,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 				token =(int)((Math.random()*9+1)*100000)+"";
 				jedis.hset("loginStatus", token, "");
 			} finally {
-				// TODO: handle finally clause
-				jedis.close();
+				if(jedis != null){
+					jedis.close();
+				}
 			}
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 			dataWrapper.setData(user);
@@ -84,7 +81,6 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	}
 
    
-	@Override
 	public DataWrapper<Void> logout(String token) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();

@@ -85,6 +85,7 @@ public class RegLoginController {
 	public DataWrapper<Void> _updateUser(
 			@RequestParam(value="token",required=true)String token
 			){
+		_logger.info("管理员修改用户");
 		return null;
 	}
 }

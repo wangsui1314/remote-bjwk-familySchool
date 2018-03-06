@@ -27,4 +27,8 @@
     <select id="queryPassWordIsOk" resultMap="queryPassWordIsOk">
      select * from users where user_name =#{userName} and pass_word=#{passWord}
     </select>
+    
+    <select id="gestureLogin" resultMap="queryPassWordIsOk">
+     select * from  users where user_name=#{userName}  and gesture_passWord=#{gesturePassWord}
+    </select>
 </mapper>       

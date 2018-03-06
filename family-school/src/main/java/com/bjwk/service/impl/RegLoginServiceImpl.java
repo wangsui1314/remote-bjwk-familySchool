@@ -79,7 +79,28 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		}
 		return dataWrapper;
 	}
-
+	//手势密码登录
+	@Override
+	public DataWrapper<Users> gestureLogin(String token,String gesturePassWord) {
+		// TODO Auto-generated method stub
+		//根据toekn获取用户名
+		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
+		Jedis  jedis=RedisClient.getInstance().getJedis();
+		String userName=jedis.hget("loginStatus", token);
+		
+		/*
+		 *  userName  和  gesturePassWord 入库检测 is True
+		 */
+		Users user=regLoginDao.gestureLogin(userName,gesturePassWord);
+		if(user==null){
+			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
+			dataWrapper.setMsg("账号或者密码错误");
+		}else{
+			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
+			dataWrapper.setData(user);
+		}
+		return dataWrapper;
+	}
 
 	public DataWrapper<Void> logout(String token) {
 		// TODO Auto-generated method stub
@@ -95,5 +116,6 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		dataWrapper.setMsg("退出成功");
 		return dataWrapper;
 	}
+
 
 }

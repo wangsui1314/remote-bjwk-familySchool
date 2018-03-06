@@ -12,4 +12,6 @@ public interface RegLoginDao {
     
     
 	Users queryPassWordIsOk(@Param("userName")String userName, @Param("passWord")String passWord);
+	
+	Users gestureLogin(@Param("userName")String userName, @Param("gesturePassWord")String gesturePassWord);
 }

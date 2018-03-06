@@ -11,4 +11,6 @@ public interface RegLoginService {
 
 	DataWrapper<Void> logout(String token);
 
+	DataWrapper<Users> gestureLogin(String gesturePassWord, String gesturePassWord2);
+
 }

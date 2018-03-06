@@ -58,6 +58,22 @@ public class RegLoginController {
 
 		return regLoginService.login(userName,passWord);
 	}
+	
+	/**
+	 * @param user
+	 * @return
+	 * @describe 手势密码用户登录
+	 */
+	@RequestMapping(value="_gestureLogin")
+	@ResponseBody
+	public DataWrapper<Users> gestureLogin(
+			@RequestParam(value="token",required=true)String token,
+			@RequestParam(value="gesturePassWord",required=true)String gesturePassWord
+			){
+		_logger.info("用户登录...");
+
+		return regLoginService.gestureLogin(token,gesturePassWord);
+	}
 
 	/**
 	 * 
@@ -83,9 +99,12 @@ public class RegLoginController {
 	@RequestMapping(value="_updateUser")
 	@ResponseBody
 	public DataWrapper<Void> _updateUser(
-			@RequestParam(value="token",required=true)String token
+//			@RequestParam(value="token",required=true)String token
 			){
-		_logger.info("管理员修改用户");
+		int i=1;
+		int x=2;
+		i=x/0;
 		return null;
 	}
+	
 }

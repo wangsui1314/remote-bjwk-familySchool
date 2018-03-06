@@ -1,5 +1,7 @@
 package com.bjwk.service.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,13 @@ import redis.clients.jedis.Jedis;
 
 @Service
 public class RegLoginServiceImpl  implements RegLoginService{
+	private static final Log _logger = LogFactory.getLog(RegLoginServiceImpl.class);
 	@Autowired
 	private RegLoginDao regLoginDao;
 
 
 	public DataWrapper<Users> insertReg(Users user) {
+		_logger.info("注册实现，接收到的数据为：User"+user.toString());
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
 		/** 
 		 * 判断账号是否存在
@@ -51,6 +55,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 
 
 	public DataWrapper<Users> login(String userName, String passWord) {
+		_logger.info("用户登录实现，接收到的数据为：userName="+userName+",passWord="+passWord);
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
 		Jedis  jedis=RedisClient.getInstance().getJedis();
 
@@ -66,6 +71,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			try {
 				//为当前注册成功的用户分配一个token，放在redis中
 				token =(int)((Math.random()*9+1)*100000)+"";
+				_logger.info("当前用户："+userName+",分配的token为："+token);
 				jedis.hset("loginStatus", token, userName);
 			} finally {
 				if(jedis != null){

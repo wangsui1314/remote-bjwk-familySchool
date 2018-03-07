@@ -59,7 +59,7 @@ public class NearManImpl implements NearManService {
 	        // 取同一城市地区&&八小时区间范围数据(八小时之前缓存数据会删除)
 	        Set<String> redisNearby = nearManRedisService.getSetByKeyAndScore(cacheKey, endIndex - EIGHT_HOUR_SECOND, endIndex);
 	        // 开启新线程写入数据(让主线程处理主业务)
-	        //threadPool.execute(new InsertCache(nearMan, cacheKey, endIndex));
+	        threadPool.execute(new InsertCache(nearMan, cacheKey, endIndex));
 
 	        if (redisNearby.size() == 0){
 	        	dataWrapper.setCallStatus(CallStatusEnum.FAILED);

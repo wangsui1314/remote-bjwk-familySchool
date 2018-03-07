@@ -55,7 +55,7 @@ public class RegLoginController {
 			@RequestParam(value="passWord",required=true)String passWord
 			){
 		_logger.info("用户登录...");
-
+      System.out.println(213);
 		return regLoginService.login(userName,passWord);
 	}
 	

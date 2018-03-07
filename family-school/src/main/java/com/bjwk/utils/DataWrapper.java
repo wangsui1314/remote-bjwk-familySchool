@@ -135,12 +135,10 @@ public class DataWrapper<T>  {
 				+ totalPage + ", num=" + num + ", msg=" + msg + "]";
 	}
 
-	public DataWrapper(ErrorCodeEnum errorCodeEnum,T data,String token,Integer num,String msg,Page page,Integer totalNumber){
+	public DataWrapper(ErrorCodeEnum errorCodeEnum,T data,String msg){
 	    this.setErrorCode(errorCodeEnum);
 	    this.data=data;
-	    this.token=token;
-	    this.num=num;
-	    this.setPage(page,totalNumber);
+	   // this.setPage(page,totalNumber);
 	    this.msg=msg;
     }
    

@@ -11,6 +11,19 @@
 		<param-value>classpath:spring.xml,classpath:spring-mybatis.xml,classpath:applicationContext-redis.xml</param-value>
 	</context-param>
     
+  <!-- 字符过滤器 -->  
+    <filter>  
+        <filter-name>encodingFilter</filter-name>  
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+        <init-param>  
+            <param-name>encoding</param-name>  
+            <param-value>UTF-8</param-value>  
+        </init-param>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>encodingFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping>  
     
     	<!--跨域访问的cors配置-->
     <filter>
@@ -22,22 +35,7 @@
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
     
-	<filter>
-		<filter-name>encodingFilter</filter-name>
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>utf-8</param-value>
-		</init-param>
-		<init-param>
-			<param-name>forceEncoding</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

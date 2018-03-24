@@ -60,5 +60,7 @@
 			<value>4096</value>
 		</property>
 	</bean>
-
+	
+	  <bean id="BeanUtil" class="com.bjwk.utils.BeanUtil"></bean>
+    <bean id="nearManRedisImpl" class="com.bjwk.service.impl.publics.nearman.NearManRedisImpl"></bean>
 </beans>

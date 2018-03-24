@@ -17,10 +17,18 @@
     <resultMap type="com.bjwk.model.pojo.Users" id="queryPassWordIsOk">
         <id column="user_id" property="userId"/>
         <result column="user_name" property="userName"/>
-        <result column="pass_word" property="passWord"/>
         <result column="eamil" property="email"/>
         <result column="phone" property="phone"/>
         <result column="sign" property="sign"/>
+        
+        <result column="coin" property="coin"/>
+        <result column="head_portrait" property="headPortrait"/>
+        <result column="profession_id" property="professionId"/>
+        <result column="sex" property="sex"/>
+        <result column="background" property="background"/>
+        <result column="style_signature" property="styleSignTure"/>
+        <result column="gestrue_isok" property="gestrueIsOk"/>
+        
         <result column="created" property="created"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
@@ -31,4 +39,32 @@
     <select id="gestureLogin" resultMap="queryPassWordIsOk">
      select * from  users where user_name=#{userName}  and gesture_passWord=#{gesturePassWord}
     </select>
+    
+    <select id="validaIsTrueByPhoneAndSign" resultMap="queryPassWordIsOk">
+     select * from users where phone =#{phone} and sign=#{sign}
+    </select>
+    
+    <update id="changeUserInfo">
+      update users 
+     <set>
+      <if test="headPortrait!=null and headPortrait!=''">
+       head_portrait=#{headPortrait} , 
+      </if>
+       <if test="sex!=null and sex!=''">
+       sex=#{sex} and 
+      </if>
+       <if test="professionId!=null and professionId!=''">
+       profession_id=#{professionId} , 
+      </if>
+      <if test="background!=null and background!=''">
+       background=#{background} , 
+      </if>
+      <if test="styleSignTure!=null and styleSignTure!=''">
+       style_signature=#{styleSignTure} , 
+      </if>
+     </set>
+     <where>
+        user_name =#{userName}
+     </where>
+    </update>
 </mapper>       

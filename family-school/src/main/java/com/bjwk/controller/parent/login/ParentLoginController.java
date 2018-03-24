@@ -26,7 +26,6 @@ public class ParentLoginController {
 	
 	@Autowired
 	private ParentLoginService parentLoginService;
-	
 	/**
 	 * 家长端登录
 	 * @param request

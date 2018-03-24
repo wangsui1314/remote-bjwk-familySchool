@@ -11,7 +11,11 @@ public enum ErrorCodeEnum implements Serializable {
     Error("服务器错误", 1),
     Login_Error("用户名或者密码错误",2),
     Username_Already_Exist("用户名已存在",3),
+    
     Register_Error("注册失败",4),
+    Verify_Code_Error("验证码错误",5),
+   Verify_Code_10min("验证码10分钟",6),
+   Verify_Code_notExist("验证码不存在",7),
     OPERATION_ERROR("操作错误",50);
     private String label;
     private Integer code;

@@ -1,11 +1,8 @@
 package com.bjwk.controller.publics.reglogin;
 
 
-import java.util.Date;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bjwk.model.pojo.Users;
 import com.bjwk.service.publics.reglogin.RegLoginService;
 import com.bjwk.utils.DataWrapper;
+import com.bjwk.utils.RedisClient;
+
+import redis.clients.jedis.Jedis;
 
 
 /**
@@ -160,5 +160,18 @@ public class RegLoginController {
 		i=x/0;
 		return null;
 	}
-	
+	@RequestMapping("_test")
+	@ResponseBody
+	public DataWrapper<Void> test(
+			@RequestParam(value="token",required=false)String token
+			){
+		DataWrapper<Void>  dataWrapper=new DataWrapper<Void>();
+		Jedis jedis=RedisClient.getInstance().getJedis();
+		if(jedis.hget("loginStatus", token)==null) {
+			dataWrapper.setMsg("请重新登录");
+			return dataWrapper;
+		}
+		dataWrapper.setMsg("1234");
+		return  dataWrapper;
+	}
 }

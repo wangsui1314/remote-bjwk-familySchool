@@ -80,38 +80,38 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 * 挤掉策略
 		 * 1 判断用户是否在线
 		 */
-		    String isOnLine=jedis.hget("statusLogin", userName);
-		    String newToken=(int)((Math.random()*9+1)*100000)+"";
-		    if(isOnLine!=null){
-		    	//使已在线用户下线
-		    	jedis.hdel("loginStatus", isOnLine)	;
-		    	jedis.hdel("statusLogin", userName)	;
-		    	jedis.hset("loginStatus", newToken, userName);
-				jedis.hset("statusLogin", userName, newToken);
-				jedis.close();
-				dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-				dataWrapper.setData(user);
-				dataWrapper.setToken(newToken);
-				dataWrapper.setMsg("登录成功");
-				return dataWrapper;
-		    }
-			String  token=null;
-			try {
-				//为当前注册成功的用户分配一个token，放在redis中
-				token =(int)((Math.random()*9+1)*100000)+"";
-				_logger.info("当前用户："+userName+",分配的token为："+token);
-				jedis.hset("loginStatus", token, userName);
-				jedis.hset("statusLogin", userName, token);
-			} finally {
-				if(jedis != null){
-					jedis.close();
-				}
-			}
+		String isOnLine=jedis.hget("statusLogin", userName);
+		String newToken=(int)((Math.random()*9+1)*100000)+"";
+		if(isOnLine!=null){
+			//使已在线用户下线
+			jedis.hdel("loginStatus", isOnLine)	;
+			jedis.hdel("statusLogin", userName)	;
+			jedis.hset("loginStatus", newToken, userName);
+			jedis.hset("statusLogin", userName, newToken);
+			jedis.close();
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 			dataWrapper.setData(user);
-			dataWrapper.setToken(token);
+			dataWrapper.setToken(newToken);
 			dataWrapper.setMsg("登录成功");
-		
+			return dataWrapper;
+		}
+		String  token=null;
+		try {
+			//为当前注册成功的用户分配一个token，放在redis中
+			token =(int)((Math.random()*9+1)*100000)+"";
+			_logger.info("当前用户："+userName+",分配的token为："+token);
+			jedis.hset("loginStatus", token, userName);
+			jedis.hset("statusLogin", userName, token);
+		} finally {
+			if(jedis != null){
+				jedis.close();
+			}
+		}
+		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
+		dataWrapper.setData(user);
+		dataWrapper.setToken(token);
+		dataWrapper.setMsg("登录成功");
+
 		return dataWrapper;
 	}
 	//手势密码登录
@@ -161,7 +161,6 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	public DataWrapper<Users> phoneVcodeLogin(String phone, String code, Integer sign) {
 		// TODO Auto-generated method stub
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
-		Jedis  jedis=RedisClient.getInstance().getJedis();
 
 		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(phone,code);
 		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
@@ -169,36 +168,64 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			return dataWrapper;
 		}
 		Users user=regLoginDao.validaIsTrueByPhoneAndSign(phone,sign);
-		System.out.println(user);
-		if(user!=null){
-			String  token=null;
-			try {
-				//为当前注册成功的用户分配一个token，放在redis中
-				token =(int)((Math.random()*9+1)*100000)+"";
-				jedis.hset("loginStatus", token, user.getUserName());
-			} finally {
-				if(jedis != null){
-					jedis.close();
-				}
-			}
-			dataWrapper.setData(user);
+		//检测用户账号密码是否正确
+		if(user==null){
+			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
+			dataWrapper.setMsg("账号或者密码错误");
+			return dataWrapper;
+
+		}
+		Jedis  jedis=RedisClient.getInstance().getJedis();
+		/**
+		 * 挤掉策略
+		 * 1 判断用户是否在线
+		 */
+		String userName =user.getUserName();
+		String isOnLine=jedis.hget("statusLogin", userName);
+		String newToken=(int)((Math.random()*9+1)*100000)+"";
+		if(isOnLine!=null){
+			//使已在线用户下线
+			jedis.hdel("loginStatus", isOnLine)	;
+			jedis.hdel("statusLogin", userName)	;
+			jedis.hset("loginStatus", newToken, userName);
+			jedis.hset("statusLogin", userName, newToken);
+			jedis.close();
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-			dataWrapper.setToken(token);
+			dataWrapper.setData(user);
+			dataWrapper.setToken(newToken);
+			dataWrapper.setMsg("登录成功");
 			return dataWrapper;
 		}
-		dataWrapper.setCallStatus(CallStatusEnum.FAILED);
+		String  token=null;
+		try {
+			//为当前注册成功的用户分配一个token，放在redis中
+			token =(int)((Math.random()*9+1)*100000)+"";
+			_logger.info("当前用户："+userName+",分配的token为："+token);
+			jedis.hset("loginStatus", token, userName);
+			jedis.hset("statusLogin", userName, token);
+		} finally {
+			if(jedis != null){
+				jedis.close();
+			}
+		}
+		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
+		dataWrapper.setData(user);
+		dataWrapper.setToken(token);
+		dataWrapper.setMsg("登录成功");
+
 		return dataWrapper;
+		
 	}
 
-    /**
-     * 更改个人信息
-     */
+	/**
+	 * 更改个人信息
+	 */
 	@Override
 	public DataWrapper<Void> changeUserInfo(String token,String headPortrait, String sex, String professionId, String background,
 			String styleSignTure) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
-		
+
 		Jedis  jedis=RedisClient.getInstance().getJedis();
 		String userName=jedis.hget("loginStatus", token);
 		if(userName==null){
@@ -206,7 +233,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			return dataWrapper;
 		}
-		
+
 		int state=regLoginDao.changeUserInfo(headPortrait,sex,professionId,background,styleSignTure,userName);
 		if(state!=0){
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
@@ -218,6 +245,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 
 	/**
 	 * 用户更改个人密码
+	 * (暂时须有不明确 待定)
 	 */
 	@Override
 	public DataWrapper<Void> userUpdateToPassWord(String sign, String phone,String code) {
@@ -230,9 +258,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			dataWrapper.setErrorCode(codeEnum);
 			return dataWrapper;
 		}
-	    //修改
+		//修改
 		int state=regLoginDao.updateUserPassWord(sign,phone);
-		
+
 		//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
 		//String token=jedis.hget("statusLogin", userName);
 		//long state=jedis.hdel("loginStatus", token);  

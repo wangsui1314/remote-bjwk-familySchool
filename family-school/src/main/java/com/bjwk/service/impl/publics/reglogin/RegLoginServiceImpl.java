@@ -13,7 +13,9 @@ import com.bjwk.utils.DataWrapper;
 import com.bjwk.utils.ErrorCodeEnum;
 import com.bjwk.utils.RedisClient;
 import com.bjwk.utils.sms.VerifiCodeValidateUtil;
+
 import redis.clients.jedis.Jedis;
+
 
 
 @Service
@@ -231,9 +233,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	    //修改
 		int state=regLoginDao.updateUserPassWord(sign,phone);
 		
-		String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
-		String token=jedis.hget("statusLogin", userName);
-		long state=jedis.hdel("loginStatus", token);  
+		//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
+		//String token=jedis.hget("statusLogin", userName);
+		//long state=jedis.hdel("loginStatus", token);  
 		return null;
 	}
 }

@@ -1,5 +1,8 @@
 package com.bjwk.service.impl.publics.reglogin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,13 @@ import com.bjwk.utils.DataWrapper;
 import com.bjwk.utils.ErrorCodeEnum;
 import com.bjwk.utils.RedisClient;
 import com.bjwk.utils.sms.VerifiCodeValidateUtil;
+
+import com.bjwk.zrongcloud.io.RongCloudKeyAndSecret;
+import com.bjwk.zrongcloud.io.rong.RongCloud;
+import com.bjwk.zrongcloud.io.rong.methods.user.User;
+import com.bjwk.zrongcloud.io.rong.models.*;
+import com.bjwk.zrongcloud.io.rong.models.response.*;
+import com.bjwk.zrongcloud.io.rong.models.user.UserModel;
 
 import redis.clients.jedis.Jedis;
 
@@ -39,26 +49,32 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		}
 		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(user.getPhone(),code);
 		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
+			//验证码错误
 			dataWrapper.setErrorCode(codeEnum);
 			return dataWrapper;
 		}
+		//获取默认用户昵称与性别 ...
+		Map<String,String> map=getDefaultMessage(user.getUserName(),user.getPhone(),user.getSex());
+		user.setNickname(map.get("nickname"));
+		user.setHeadPortrait(map.get("headPortrait"));
 
-		if(regLoginDao.insertReg(user)!=0){
-			Jedis jedis=null;
-			String token=null;
-
-			jedis=RedisClient.getInstance().getJedis();
-			//为当前注册成功的用户分配一个token，放在redis中
-			token =(int)((Math.random()*9+1)*100000)+"";
-			jedis.hset("loginStatus", token, user.getUserName());
-			jedis.close();
+		/**
+		 * 更改为注册成功 不是登录成功状态
+		 */
+		int sign=regLoginDao.insertReg(user);
+		if(sign!=0){
+			//获取融云rongCloudToken
+			TokenResult tr=(TokenResult) getRongCloudToken(user.getUserId()+"",map.get("nickname"),map.get("headPortrait"),1);
+			System.out.println(user);
+			System.out.println(tr);
+			if(tr!=null) {
+				dataWrapper.setRongCloudToken(tr.getToken());
+			}
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 			dataWrapper.setData(user);
-			dataWrapper.setToken(token);
 			dataWrapper.setMsg("注册成功");
-			System.out.println(dataWrapper);
+			//注册成功并在融云建立用户关系
 		}
-
 		return dataWrapper;
 	}
 
@@ -214,7 +230,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		dataWrapper.setMsg("登录成功");
 
 		return dataWrapper;
-		
+
 	}
 
 	/**
@@ -265,5 +281,70 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		//String token=jedis.hget("statusLogin", userName);
 		//long state=jedis.hdel("loginStatus", token);  
 		return null;
+	}
+
+	/**
+	 * API 文档: http://rongcloud.github.io/server-sdk-nodejs/docs/v1/user/user.html#register
+	 *
+	 * 
+	 */
+	public Result getRongCloudToken(String userId,String userName,String headPortrait,int type) {
+		try {
+				
+				RongCloud rongCloud = RongCloud.getInstance(RongCloudKeyAndSecret.key, RongCloudKeyAndSecret.secret);
+				//自定义 api 地址方式
+				// RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret,api);
+				User User = rongCloud.user;
+
+				UserModel user = new UserModel()
+						.setId(userId)
+						.setName(userName)
+						.setPortrait(headPortrait);
+				if(type==1) {
+					//注册用户，生成用户在融云的唯一身份标识 Token
+					TokenResult result = User.register(user);
+					if(result.getCode()==200) {
+						return result;
+					}
+				}else if(type==2) {
+					   //刷新用户信息方法
+					Result refreshResult = User.update(user);
+					return refreshResult;
+					
+				}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	/**
+	 * 
+	 * @param userName
+	 * @param phone
+	 * @param sex
+	 * @return  Map
+	 */
+	private Map<String,String> getDefaultMessage(String userName,String phone,int sex){
+		Map<String,String> map=new HashMap<String,String>();
+		//默认昵称策略
+		int phoneLen=phone.length();
+
+		String nickname=userName.substring(0, 3)+phone.substring(phoneLen-4, phoneLen);
+		//根据用户性别设置默认头像
+		String headPortrait=null;
+		/**
+		 * 
+		 *  ellipsis some code
+		 */
+		if(sex==0) {
+			//女
+			headPortrait="http://www.rongcloud.cn/images/logo.png";
+		}else {
+			headPortrait="http://www.rongcloud.cn/images/logo.png";
+		}
+		map.put("nickname", nickname);
+		map.put("headPortrait", headPortrait);
+		return map;
 	}
 }

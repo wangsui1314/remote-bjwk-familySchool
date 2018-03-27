@@ -13,7 +13,7 @@ public class DataWrapper<T>  {
     private int totalPage;
     private int num;
     private String msg;
-    private String fl;
+    private String rongCloudToken;
 
     public DataWrapper() {
         callStatus = CallStatusEnum.SUCCEED;
@@ -45,13 +45,7 @@ public class DataWrapper<T>  {
         return data;
     }
 
-    public String getFl() {
-		return fl;
-	}
-
-	public void setFl(String fl) {
-		this.fl = fl;
-	}
+   
 
 	public void setData(T data) {
         this.data = data;
@@ -126,13 +120,22 @@ public class DataWrapper<T>  {
         }
     }
 
+	
+
 	@Override
 	public String toString() {
-		return "DataWrapper [callStatus=" + callStatus + ", errorCode="
-				+ errorCode + ", data=" + data + ", token=" + token
-				+ ", numberPerPage=" + numberPerPage + ", currentPage="
-				+ currentPage + ", totalNumber=" + totalNumber + ", totalPage="
-				+ totalPage + ", num=" + num + ", msg=" + msg + "]";
+		return "DataWrapper [callStatus=" + callStatus + ", errorCode=" + errorCode + ", data=" + data + ", token="
+				+ token + ", numberPerPage=" + numberPerPage + ", currentPage=" + currentPage + ", totalNumber="
+				+ totalNumber + ", totalPage=" + totalPage + ", num=" + num + ", msg=" + msg + ", rongCloudToken="
+				+ rongCloudToken + "]";
+	}
+
+	public String getRongCloudToken() {
+		return rongCloudToken;
+	}
+
+	public void setRongCloudToken(String rongCloudToken) {
+		this.rongCloudToken = rongCloudToken;
 	}
 
 	public DataWrapper(ErrorCodeEnum errorCodeEnum,T data,String msg){

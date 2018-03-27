@@ -1,10 +1,11 @@
 package com.bjwk.zrongcloud.io.rong.example.user;
 
-import com.bjwk.zrongcloud.io.KeyAndSecret;
+
+import com.bjwk.zrongcloud.io.RongCloudKeyAndSecret;
 import com.bjwk.zrongcloud.io.rong.RongCloud;
 import com.bjwk.zrongcloud.io.rong.methods.user.User;
-import com.bjwk.zrongcloud.io.rong.models.*;
-import com.bjwk.zrongcloud.io.rong.models.response.*;
+import com.bjwk.zrongcloud.io.rong.models.Result;
+import com.bjwk.zrongcloud.io.rong.models.response.TokenResult;
 import com.bjwk.zrongcloud.io.rong.models.user.UserModel;
 
 /**
@@ -17,11 +18,11 @@ public class UserExample {
     /**
      * 此处替换成您的appKey
      * */
-    private static final String appKey = KeyAndSecret.key;
+    private static final String appKey = RongCloudKeyAndSecret.key;
     /**
      * 此处替换成您的appSecret
      * */
-    private static final String appSecret = KeyAndSecret.secret;
+    private static final String appSecret = RongCloudKeyAndSecret.secret;
     /**
      * 自定义api地址
      * */
@@ -45,7 +46,8 @@ public class UserExample {
                 .setPortrait("http://www.rongcloud.cn/images/logo.png");
         TokenResult result = User.register(user);
         System.out.println("getToken:  " + result.toString());
-
+        //JSONObject jsonObject=JSONObject.fromObject(result.toString());
+        //System.out.println(jsonObject.get("result"));
         /**
          *
          * API 文档: http://rongcloud.github.io/server-sdk-nodejs/docs/v1/user/user.html#refresh

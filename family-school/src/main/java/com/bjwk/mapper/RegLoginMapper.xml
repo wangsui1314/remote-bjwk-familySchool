@@ -5,7 +5,11 @@
 <mapper namespace="com.bjwk.dao.RegLoginDao">
     
     
-    <insert id="insertReg">
+    <insert id="insertReg" parameterType="com.bjwk.model.pojo.Users">
+    
+       <selectKey resultType="int" order="AFTER" keyProperty="userId">
+          SELECT LAST_INSERT_ID()
+      </selectKey>
       insert into users(user_name,pass_word,email,sign,created) values(#{userName},#{passWord},#{email},sign,now())
     </insert>
     

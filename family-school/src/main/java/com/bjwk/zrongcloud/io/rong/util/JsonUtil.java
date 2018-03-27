@@ -9,11 +9,12 @@ import java.io.*;
 /**
  * Json公共服务
  * @date 2018-03-09
- * @author RongCloud
+ * @author RongCloud/   com.bjwk.zrongcloud.resources.jsonsource
  */
 public class JsonUtil {
-	static final String   JSONFILE = MessageExample.class.getClassLoader().getResource("resources").getPath()+"/jsonsource/";
-
+	//static final String   JSONFILE = MessageExample.class.getClassLoader().getResource("resources").getPath()+"/jsonsource/";
+	static final String   JSONFILE = JsonUtil.class.getClassLoader().getResource("").getPath()+"com/bjwk/zrongcloud/resources/jsonsource/";
+   
     /**
      * 获取JsonObject
      *
@@ -48,7 +49,7 @@ public class JsonUtil {
     }
     public static void main(String[] args){
         try {
-           System.out.println((String)getJsonObject("group","/verify.json"));
+           System.out.println(getJsonObject("group","/verify.json").toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

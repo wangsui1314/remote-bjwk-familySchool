@@ -128,9 +128,9 @@ public class Private {
 
 		Templates templateMessage = new Templates();
 
-		ArrayList<String> toUserIds = new ArrayList<>();
-		List<Map<String,String>> values = new ArrayList<>();
-		List<String> push = new ArrayList<>();
+		ArrayList<String> toUserIds = new ArrayList<String>();
+		List<Map<String,String>> values = new ArrayList<Map<String,String>>();
+		List<String> push = new ArrayList<String>();
 
 		for(Map.Entry<String, TemplateMessage.Data> vo : message.getContent().entrySet()){
 			toUserIds.add(vo.getKey());

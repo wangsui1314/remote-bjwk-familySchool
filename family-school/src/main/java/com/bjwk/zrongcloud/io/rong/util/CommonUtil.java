@@ -353,7 +353,7 @@ public class CommonUtil {
                 }else{
                     subkeys = keys;
                 }
-                Map<String,String[]> map = new HashMap<>();
+                Map<String,String[]> map = new HashMap<String,String[]>();
                 map.put(key,subkeys.toArray(new String[subkeys.size()]));
                 return map;
             }catch(ClassCastException e){
@@ -385,7 +385,7 @@ public class CommonUtil {
                if(path.contains("blacklist") && method.equals("getList")){
 
                    UserList userList = (UserList)GsonUtil.fromJson(response,UserList.class);
-                   ArrayList<UserModel> users = new ArrayList<>();
+                   ArrayList<UserModel> users = new ArrayList<UserModel>();
                    for(String id : userList.getUsers()){
                        users.add(new UserModel().setId(id));
                    }
@@ -399,7 +399,7 @@ public class CommonUtil {
 
                    UserList userList = (UserList)GsonUtil.fromJson(response,UserList.class);
                    //User[] members = {};
-                   ArrayList<UserModel> users = new ArrayList<>();
+                   ArrayList<UserModel> users = new ArrayList<UserModel>();
                    for(String id : userList.getUsers()){
                        users.add(new UserModel().setId(id));
                    }

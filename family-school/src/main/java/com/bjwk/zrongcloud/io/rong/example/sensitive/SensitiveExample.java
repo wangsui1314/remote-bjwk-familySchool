@@ -1,5 +1,6 @@
 package com.bjwk.zrongcloud.io.rong.example.sensitive;
 
+import com.bjwk.zrongcloud.io.RongCloudKeyAndSecret;
 import com.bjwk.zrongcloud.io.rong.RongCloud;
 import com.bjwk.zrongcloud.io.rong.methods.sensitive.SensitiveWord;
 import com.bjwk.zrongcloud.io.rong.models.response.ListWordfilterResult;
@@ -12,11 +13,11 @@ public class SensitiveExample {
    /**
     * 此处替换成您的appKey
     *  */
-    private static final String appKey = "appKey";
+    private static final String appKey = RongCloudKeyAndSecret.key;
     /**
      * 此处替换成您的appSecret
      * */
-    private static final String appSecret = "appSecret";
+    private static final String appSecret = RongCloudKeyAndSecret.secret;
     /**
      * 自定义api地址
      * */

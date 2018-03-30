@@ -18,9 +18,13 @@ public interface RegLoginDao {
 	Users validaIsTrueByPhoneAndSign(@Param("phone")String phone, @Param("sign")Integer sign);
 	
 	
-	int changeUserInfo(@Param("headPortrait")String headPortrait, @Param("sex")String sex, @Param("professionId")String professionId,
+	int changeUserInfo(@Param("headPortrait")String headPortrait, @Param("sex")String sex,
+			@Param("nickName") String nickName,
+			@Param("professionId")String professionId,
 			@Param("background")String background, @Param("styleSignTure")String styleSignTure,
 			@Param("userName")String userName);
 	
 	int updateUserPassWord(@Param("sign")String sign, @Param("phone")String phone);
+	
+	String getUserIdByUserName(@Param("userName")String userName);
 }

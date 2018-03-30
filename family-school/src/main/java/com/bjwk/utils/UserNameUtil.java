@@ -1,0 +1,19 @@
+package com.bjwk.utils;
+
+import redis.clients.jedis.Jedis;
+/**
+ * 
+ * @ClassName: UserNameUtil 
+ * @Description: TODO("获取用户用户名") 
+ * @author: lihui 
+ * @date: 2018年3月30日 下午11:14:15
+ */
+public class UserNameUtil {
+    
+   public static String getUserNameBytoken(String token) {
+	   
+	   Jedis jedis=RedisClient.getInstance().getJedis();
+	   
+	   return jedis.hget("loginStatus", token);
+   }
+}

@@ -10,13 +10,17 @@
        <selectKey resultType="int" order="AFTER" keyProperty="userId">
           SELECT LAST_INSERT_ID()
       </selectKey>
-      insert into users(user_name,pass_word,email,sign,created) values(#{userName},#{passWord},#{email},sign,now())
+      insert into users(user_name,pass_word,email,sign,head_portrait,sex,nick_name,created) values(
+      #{userName},#{passWord},#{email},#{sign},#{headPortrait},#{sex},#{nickName},now())
     </insert>
     
     <select id="queryUserIsTrue" resultType="String">
      select user_name from users  where user_name =#{userName}
     </select>
     
+    <select id="getUserIdByUserName"  resultType="java.lang.String">
+      select user_id from users where user_name=#{userName}
+    </select>
     
     <resultMap type="com.bjwk.model.pojo.Users" id="queryPassWordIsOk">
         <id column="user_id" property="userId"/>
@@ -29,6 +33,7 @@
         <result column="head_portrait" property="headPortrait"/>
         <result column="profession_id" property="professionId"/>
         <result column="sex" property="sex"/>
+        <result column="nick_name" property="nickName"/>
         <result column="background" property="background"/>
         <result column="style_signature" property="styleSignTure"/>
         <result column="gestrue_isok" property="gestrueIsOk"/>
@@ -55,7 +60,10 @@
        head_portrait=#{headPortrait} , 
       </if>
        <if test="sex!=null and sex!=''">
-       sex=#{sex} and 
+       sex=#{sex}, 
+      </if>
+      <if test="nickName !=null and nickName !=''">
+       nick_name=#{nickName},
       </if>
        <if test="professionId!=null and professionId!=''">
        profession_id=#{professionId} , 

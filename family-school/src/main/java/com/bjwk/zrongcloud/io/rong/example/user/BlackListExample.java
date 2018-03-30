@@ -1,5 +1,6 @@
 package com.bjwk.zrongcloud.io.rong.example.user;
 
+import com.bjwk.zrongcloud.io.RongCloudKeyAndSecret;
 import com.bjwk.zrongcloud.io.rong.RongCloud;
 import com.bjwk.zrongcloud.io.rong.methods.user.blacklist.Blacklist;
 import com.bjwk.zrongcloud.io.rong.models.Result;
@@ -25,7 +26,7 @@ public class BlackListExample {
 
     public static void main(String[] args) throws Exception {
 
-        RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
+        RongCloud rongCloud = RongCloud.getInstance(RongCloudKeyAndSecret.key, RongCloudKeyAndSecret.secret);
         //自定义 api 地址方式
         // RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret,api);
 

@@ -125,13 +125,15 @@ public class RegLoginController {
 			@RequestParam(value="token",required=false)String token,
 			@RequestParam(value="headPortrait",required=false)String headPortrait,
 			@RequestParam(value="sex",required=false)String sex,
+			@RequestParam(value="nickName",required=false) String nickName,
 			@RequestParam(value="professionId",required=false)String professionId,
 			@RequestParam(value="background",required=false)String background,
 			@RequestParam(value="styleSignTure",required=false)String styleSignTure
 			){
 		_logger.info("用户更改个人信息...");
 		System.out.println(styleSignTure);//Connector标签增加useBodyEncodingForURI="true"
-		return regLoginService.changeUserInfo(token,headPortrait,sex,professionId,background,styleSignTure);
+		return regLoginService.changeUserInfo(token,headPortrait,sex,professionId,background,styleSignTure
+				,nickName);
 	}
 	
 	@RequestMapping(value="_userUpdateToPassWord")

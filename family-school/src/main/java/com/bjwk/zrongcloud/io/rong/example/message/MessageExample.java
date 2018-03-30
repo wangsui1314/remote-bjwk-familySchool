@@ -13,6 +13,8 @@ import com.bjwk.zrongcloud.io.rong.models.message.*;
 import com.bjwk.zrongcloud.io.rong.models.response.HistoryMessageResult;
 import com.bjwk.zrongcloud.io.rong.models.response.ResponseResult;
 import com.bjwk.zrongcloud.io.rong.util.GsonUtil;
+import com.bjwk.zrongcloud.io.rong.util.JsonUtil;
+
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -27,7 +29,8 @@ import java.io.Reader;
 public class MessageExample {
     //private static final String JSONFILE = MessageExample.class.getClassLoader().getResource("jsonsource").getPath()+"/";
     
-	static final String   JSONFILE = MessageExample.class.getClassLoader().getResource("resources").getPath()+"/jsonsource/";
+	static final String   JSONFILE = JsonUtil.class.getClassLoader().getResource("").getPath()+"com/bjwk/zrongcloud/resources/jsonsource/";
+
     /**
      * 此处替换成您的appKey
      * */

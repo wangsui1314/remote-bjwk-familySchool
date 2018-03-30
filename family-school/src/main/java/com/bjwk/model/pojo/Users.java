@@ -28,7 +28,7 @@ public class Users {
 	private  int coin;//优币
 	private String headPortrait;//头像
 	private Integer sex;//性别
-	private String nickname;//用户昵称
+	private String nickName;//用户昵称
 	private Integer professionId;//职业id
 	private String background;//背景墙
 	private  String styleSignTure;//个性签名
@@ -40,12 +40,7 @@ public class Users {
 
 	
 	
-	public String getNickname() {
-		return nickname;
-	}
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
+	
 	public String getBackground() {
 		return background;
 	}
@@ -145,11 +140,17 @@ public class Users {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", userName=" + userName + ", passWord=" + passWord + ", phone=" + phone
 				+ ", email=" + email + ", sign=" + sign + ", coin=" + coin + ", headPortrait=" + headPortrait + ", sex="
-				+ sex + ", nickname=" + nickname + ", professionId=" + professionId + ", background=" + background
+				+ sex + ", nickName=" + nickName + ", professionId=" + professionId + ", background=" + background
 				+ ", styleSignTure=" + styleSignTure + ", gesturePassWord=" + gesturePassWord + ", gestrueIsOk="
 				+ gestrueIsOk + ", created=" + created + ", updateTime=" + updateTime + "]";
 	}

@@ -55,7 +55,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		}
 		//获取默认用户昵称与性别 ...
 		Map<String,String> map=getDefaultMessage(user.getUserName(),user.getPhone(),user.getSex());
-		user.setNickname(map.get("nickname"));
+		user.setNickName(map.get("nickname"));
 		user.setHeadPortrait(map.get("headPortrait"));
 
 		/**
@@ -96,37 +96,22 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 * 挤掉策略
 		 * 1 判断用户是否在线
 		 */
-		String isOnLine=jedis.hget("statusLogin", userName);
-		String newToken=(int)((Math.random()*9+1)*100000)+"";
-		if(isOnLine!=null){
-			//使已在线用户下线
-			jedis.hdel("loginStatus", isOnLine)	;
-			jedis.hdel("statusLogin", userName)	;
-			jedis.hset("loginStatus", newToken, userName);
-			jedis.hset("statusLogin", userName, newToken);
-			jedis.close();
-			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-			dataWrapper.setData(user);
-			dataWrapper.setToken(newToken);
-			dataWrapper.setMsg("登录成功");
-			return dataWrapper;
-		}
-		String  token=null;
-		try {
-			//为当前注册成功的用户分配一个token，放在redis中
-			token =(int)((Math.random()*9+1)*100000)+"";
-			_logger.info("当前用户："+userName+",分配的token为："+token);
+		//String isOnLine=jedis.hget("statusLogin", userName);
+		String token=(int)((Math.random()*9+1)*100000)+"";
+		
+			//利用redis hset存在覆盖 不存在插入的特性达到挤掉
+			
 			jedis.hset("loginStatus", token, userName);
 			jedis.hset("statusLogin", userName, token);
-		} finally {
-			if(jedis != null){
-				jedis.close();
-			}
-		}
-		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-		dataWrapper.setData(user);
-		dataWrapper.setToken(token);
-		dataWrapper.setMsg("登录成功");
+			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
+			dataWrapper.setData(user);
+			dataWrapper.setToken(token);
+			dataWrapper.setMsg("登录成功");
+		
+		jedis.close();
+		//为当前注册成功的用户分配一个token，放在redis中
+		_logger.info("当前用户："+userName+",分配的token为："+token);
+		
 
 		return dataWrapper;
 	}
@@ -159,6 +144,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 		Jedis  jedis=RedisClient.getInstance().getJedis();
+		jedis.hdel("statusLogin", jedis.hget("loginStatus", token));
 		long state=jedis.hdel("loginStatus", token);
 		if(state==0){
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
@@ -197,12 +183,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 * 1 判断用户是否在线
 		 */
 		String userName =user.getUserName();
-		String isOnLine=jedis.hget("statusLogin", userName);
+	//	String isOnLine=jedis.hget("statusLogin", userName);
 		String newToken=(int)((Math.random()*9+1)*100000)+"";
-		if(isOnLine!=null){
 			//使已在线用户下线
-			jedis.hdel("loginStatus", isOnLine)	;
-			jedis.hdel("statusLogin", userName)	;
 			jedis.hset("loginStatus", newToken, userName);
 			jedis.hset("statusLogin", userName, newToken);
 			jedis.close();
@@ -211,26 +194,6 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			dataWrapper.setToken(newToken);
 			dataWrapper.setMsg("登录成功");
 			return dataWrapper;
-		}
-		String  token=null;
-		try {
-			//为当前注册成功的用户分配一个token，放在redis中
-			token =(int)((Math.random()*9+1)*100000)+"";
-			_logger.info("当前用户："+userName+",分配的token为："+token);
-			jedis.hset("loginStatus", token, userName);
-			jedis.hset("statusLogin", userName, token);
-		} finally {
-			if(jedis != null){
-				jedis.close();
-			}
-		}
-		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-		dataWrapper.setData(user);
-		dataWrapper.setToken(token);
-		dataWrapper.setMsg("登录成功");
-
-		return dataWrapper;
-
 	}
 
 	/**
@@ -238,7 +201,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	 */
 	@Override
 	public DataWrapper<Void> changeUserInfo(String token,String headPortrait, String sex, String professionId, String background,
-			String styleSignTure) {
+			String styleSignTure,String nickName) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 
@@ -249,9 +212,14 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			return dataWrapper;
 		}
-
-		int state=regLoginDao.changeUserInfo(headPortrait,sex,professionId,background,styleSignTure,userName);
+		int state=regLoginDao.changeUserInfo(headPortrait,sex,nickName,professionId,background,styleSignTure,userName);
 		if(state!=0){
+			/**
+			 * 更改rongcloud 用户信息主要包括昵称与头像
+			 */
+			Result res=getRongCloudToken(regLoginDao.getUserIdByUserName(userName),nickName,headPortrait,2);
+			//测试 打印数据
+			if(res.getCode()!=200) { System.out.println("更改rongcloud数据出错");}
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 			return dataWrapper;
 		}
@@ -288,30 +256,30 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	 *
 	 * 
 	 */
-	public Result getRongCloudToken(String userId,String userName,String headPortrait,int type) {
+	public Result getRongCloudToken(String userId,String nickName,String headPortrait,int type) {
 		try {
-				
-				RongCloud rongCloud = RongCloud.getInstance(RongCloudKeyAndSecret.key, RongCloudKeyAndSecret.secret);
-				//自定义 api 地址方式
-				// RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret,api);
-				User User = rongCloud.user;
 
-				UserModel user = new UserModel()
-						.setId(userId)
-						.setName(userName)
-						.setPortrait(headPortrait);
-				if(type==1) {
-					//注册用户，生成用户在融云的唯一身份标识 Token
-					TokenResult result = User.register(user);
-					if(result.getCode()==200) {
-						return result;
-					}
-				}else if(type==2) {
-					   //刷新用户信息方法
-					Result refreshResult = User.update(user);
-					return refreshResult;
-					
+			RongCloud rongCloud = RongCloud.getInstance(RongCloudKeyAndSecret.key, RongCloudKeyAndSecret.secret);
+			//自定义 api 地址方式
+			// RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret,api);
+			User User = rongCloud.user;
+
+			UserModel user = new UserModel()
+					.setId(userId)
+					.setName(nickName)
+					.setPortrait(headPortrait);
+			if(type==1) {
+				//注册用户，生成用户在融云的唯一身份标识 Token
+				TokenResult result = User.register(user);
+				if(result.getCode()==200) {
+					return result;
 				}
+			}else if(type==2) {
+				//刷新用户信息方法
+				Result refreshResult = User.update(user);
+				return refreshResult;
+
+			}
 
 		} catch (Exception e) {
 			// TODO: handle exception

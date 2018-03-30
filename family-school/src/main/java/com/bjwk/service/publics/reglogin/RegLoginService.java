@@ -15,9 +15,11 @@ public interface RegLoginService {
 
 	DataWrapper<Users> phoneVcodeLogin(String phone, String code, Integer sign);
 
-	DataWrapper<Void> changeUserInfo(String token,String headPortrait, String sex, String professionId, String background,
-			String styleSignTure);
+
 
 	DataWrapper<Void> userUpdateToPassWord(String sign, String phone, String code);
+
+	DataWrapper<Void> changeUserInfo(String token, String headPortrait, String sex, String professionId,
+			String background, String styleSignTure, String nickName);
 
 }

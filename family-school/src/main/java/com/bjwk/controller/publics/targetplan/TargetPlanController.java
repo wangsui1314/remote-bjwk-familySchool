@@ -53,7 +53,11 @@ public class TargetPlanController {
 	}
 	
 	
-	
+	/**
+	 * 获取目标计划
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("getPlan")
 	@ResponseBody
 	public JSONObject getPlan(@RequestBody JSONObject request){

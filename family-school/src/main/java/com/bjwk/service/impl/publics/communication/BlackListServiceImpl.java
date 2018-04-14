@@ -17,7 +17,7 @@ import com.bjwk.zrongcloud.io.rong.models.user.UserModel;
 
 import redis.clients.jedis.Jedis;
 
-@Service
+@Service("blackListServiceImpl")
 public class BlackListServiceImpl implements BlackListService{
 
 	@Autowired

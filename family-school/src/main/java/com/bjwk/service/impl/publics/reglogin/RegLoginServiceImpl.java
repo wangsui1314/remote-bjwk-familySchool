@@ -61,7 +61,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		/**
 		 * 更改为注册成功 不是登录成功状态
 		 */
-		int sign=regLoginDao.insertReg(user);
+		int sign=regLoginDao.insertReg (user);
 		if(sign!=0){
 			//获取融云rongCloudToken
 			TokenResult tr=(TokenResult) getRongCloudToken(user.getUserId()+"",map.get("nickname"),map.get("headPortrait"),1);

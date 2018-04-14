@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import com.bjwk.model.pojo.Users;
-@Component
+
 public interface RegLoginDao {
 
 	int insertReg(Users user);

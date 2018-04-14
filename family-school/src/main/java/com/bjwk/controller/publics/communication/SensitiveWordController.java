@@ -65,7 +65,7 @@ public class SensitiveWordController {
 		return sensitiveWordService.removeSensWord(adminToken,word);
 	}
 	
-	@RequestMapping("removeSensWord")
+	@RequestMapping("querySensWordList")
 	@ResponseBody
 	public DataWrapper<ListWordfilterResult>  querySensWordList(
 			@RequestParam(value="adminToken",required=false) String adminToken,	

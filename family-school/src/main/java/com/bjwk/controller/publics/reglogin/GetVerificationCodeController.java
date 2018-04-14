@@ -22,7 +22,7 @@ import com.bjwk.utils.sms.VerifyCodeManager;
  * 2018年3月23日 上午12:15:00
  */
 @Controller
-@RequestMapping("api/getVcode")
+@RequestMapping("api/get")
 public class GetVerificationCodeController {
 
 	private static final Log _logger = LogFactory.getLog(GetVerificationCodeController.class);

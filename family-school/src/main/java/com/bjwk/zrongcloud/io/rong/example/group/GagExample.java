@@ -44,7 +44,7 @@ public class GagExample {
          * API 文档: http://rongcloud.github.io/server-sdk-nodejs/docs/v1/group/gag.html#add
          * 添加禁言群成员方法
          */
-        String[] memberIds = {"userId1","userid2","userId3"};
+       // String[] memberIds = {"userId1","userid2","userId3"};
 
         GroupMember[] members = {new GroupMember().setId("ghJiu7H1"),new GroupMember().setId("ghJiu7H2")};
 

@@ -1,5 +1,7 @@
 package com.bjwk.service.impl.publics.communication;
 
+import org.springframework.stereotype.Service;
+
 import com.bjwk.service.publics.communication.SensitiveWordService;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
@@ -9,7 +11,7 @@ import com.bjwk.zrongcloud.io.rong.methods.sensitive.SensitiveWord;
 import com.bjwk.zrongcloud.io.rong.models.response.ListWordfilterResult;
 import com.bjwk.zrongcloud.io.rong.models.response.ResponseResult;
 import com.bjwk.zrongcloud.io.rong.models.sensitiveword.SensitiveWordModel;
-
+@Service
 public class SensitiveWordServiceImpl implements SensitiveWordService {
 
 	@Override

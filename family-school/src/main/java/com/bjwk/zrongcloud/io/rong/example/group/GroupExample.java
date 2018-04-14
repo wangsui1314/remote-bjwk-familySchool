@@ -1,5 +1,6 @@
 package com.bjwk.zrongcloud.io.rong.example.group;
 
+import com.bjwk.zrongcloud.io.RongCloudKeyAndSecret;
 import com.bjwk.zrongcloud.io.rong.RongCloud;
 import com.bjwk.zrongcloud.io.rong.methods.group.Group;
 import com.bjwk.zrongcloud.io.rong.models.Result;
@@ -7,6 +8,7 @@ import com.bjwk.zrongcloud.io.rong.models.group.GroupMember;
 import com.bjwk.zrongcloud.io.rong.models.group.GroupModel;
 import com.bjwk.zrongcloud.io.rong.models.group.UserGroup;
 import com.bjwk.zrongcloud.io.rong.models.response.GroupUserQueryResult;
+import com.bjwk.zrongcloud.io.rong.util.JsonUtil;
 
 /**
  *
@@ -16,7 +18,7 @@ import com.bjwk.zrongcloud.io.rong.models.response.GroupUserQueryResult;
  * @version
  */
 public class GroupExample {
-	private static final String JSONFILE = GroupExample.class.getClassLoader().getResource("jsonsource").getPath()+"/";
+	static final String   JSONFILE = JsonUtil.class.getClassLoader().getResource("").getPath()+"com/bjwk/zrongcloud/resources/jsonsource/";
 	/**
 	 * 此处替换成您的appKey
 	 * */
@@ -38,7 +40,7 @@ public class GroupExample {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
+		RongCloud rongCloud = RongCloud.getInstance(RongCloudKeyAndSecret.key, RongCloudKeyAndSecret.secret);
 		//自定义 api 地址方式
 		// RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret,api);
 

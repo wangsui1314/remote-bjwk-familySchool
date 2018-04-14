@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bjwk.dao.LuckyDrawMapper">
+<mapper namespace="com.bjwk.dao.LuckyDrawDao">
 <resultMap id="BaseResultMap" type="com.bjwk.model.LuckyDraw">
-		<id column="prize_id" property="prizeId" jdbcType="INTEGER" />
-		<result column="prize_name" property="prizeName" jdbcType="VARCHAR" />
-		<result column="prize_grade" property="prizeGrade" jdbcType="VARCHAR" />
-		<result column="prize_probability" property="prizeProbability" jdbcType="double" />
+		<id column="prize_id" property="prizeId" />
+		<result column="prize_name" property="prizeName" />
+		<result column="prize_grade" property="prizeGrade" />
+		<result column="prize_probability" property="prizeProbability" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		prize_name,prize_grade,prize_probability
@@ -14,9 +14,9 @@
 		insert into 
 		lucky_draw(prize_name,prize_grade,prize_probability)
 		values(
-		#{prize_name,jdbcType=VARCHAR},
-		#{prize_grade,jdbcType=VARCHAR},
-		#{prize_probability,jdbcType=double},
+		#{prize_name},
+		#{prize_gradeR},
+		#{prize_probability}
 		)
 	</insert>
 	<select id="selectByPrize" parameterType="java.lang.String" resultMap="BaseResultMap">

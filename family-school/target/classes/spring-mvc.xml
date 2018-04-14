@@ -35,6 +35,8 @@
 		</property>
 	</bean>
 
+    <!-- my bean -->
+    <bean id="exceptionResolver" class="com.bjwk.utils.exception.ExceptionHandler"/> 
 	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -58,5 +60,7 @@
 			<value>4096</value>
 		</property>
 	</bean>
-
+	
+	  <bean id="BeanUtil" class="com.bjwk.utils.BeanUtil"></bean>
+    <bean id="nearManRedisImpl" class="com.bjwk.service.impl.publics.nearman.NearManRedisImpl"></bean>
 </beans>

@@ -30,7 +30,7 @@ public class ExceptionHandler {
 		DataWrapper<String> dataWrapper = new DataWrapper<String>();
 		
 		dataWrapper.setCallStatus(CallStatusEnum.FAILED);
-		System.out.println("错了");
+		//System.out.println("错了");
 		dataWrapper.setData(ex.getMessage());
 		
         return dataWrapper;

@@ -200,7 +200,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	 * 更改个人信息
 	 */
 	@Override
-	public DataWrapper<Void> changeUserInfo(String token,String headPortrait, String sex, String professionId, String background,
+	public DataWrapper<Void> changeUserInfo(String token,String headPortrait, String sex, String lableId, String background,
 			String styleSignTure,String nickName) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
@@ -212,7 +212,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			return dataWrapper;
 		}
-		int state=regLoginDao.changeUserInfo(headPortrait,sex,nickName,professionId,background,styleSignTure,userName);
+		int state=regLoginDao.changeUserInfo(headPortrait,sex,nickName,lableId,background,styleSignTure,userName);
 		if(state!=0){
 			/**
 			 * 更改rongcloud 用户信息主要包括昵称与头像

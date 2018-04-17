@@ -14,6 +14,7 @@ import com.bjwk.model.pojo.Users;
 import com.bjwk.service.publics.reglogin.RegLoginService;
 import com.bjwk.utils.DataWrapper;
 import com.bjwk.utils.RedisClient;
+import com.bjwk.utils.annotation.TokenValidate;
 
 import redis.clients.jedis.Jedis;
 
@@ -23,6 +24,7 @@ import redis.clients.jedis.Jedis;
  * @describe  用户登录注册（教师，学生，家长，管理员）
  * @date 2018年2月27日 下午8:46:29 
  * @version 1.0
+ * @TokenValidate 自定义注解  切面验证token是否通过 
  */
 @Controller
 @RequestMapping("api/regLogin")
@@ -111,7 +113,7 @@ public class RegLoginController {
 		return regLoginService.logout(token);
 	}
 	/**
-	 * 
+	 * 用户更改个人信息..
 	 * @param headPortrait
 	 * @param sex
 	 * @param professionId
@@ -121,18 +123,19 @@ public class RegLoginController {
 	 */
 	@RequestMapping(value="_changeUserInfo")
 	@ResponseBody
+	@TokenValidate
 	public DataWrapper<Void> changeUserInfo(
 			@RequestParam(value="token",required=false)String token,
 			@RequestParam(value="headPortrait",required=false)String headPortrait,
 			@RequestParam(value="sex",required=false)String sex,
 			@RequestParam(value="nickName",required=false) String nickName,
-			@RequestParam(value="professionId",required=false)String professionId,
+			@RequestParam(value="lableId",required=false)String lableId,//入参格式  1,2,3,4,5,7,12
 			@RequestParam(value="background",required=false)String background,
 			@RequestParam(value="styleSignTure",required=false)String styleSignTure
 			){
 		_logger.info("用户更改个人信息...");
 		System.out.println(styleSignTure);//Connector标签增加useBodyEncodingForURI="true"
-		return regLoginService.changeUserInfo(token,headPortrait,sex,professionId,background,styleSignTure
+		return regLoginService.changeUserInfo(token,headPortrait,sex,lableId,background,styleSignTure
 				,nickName);
 	}
 	

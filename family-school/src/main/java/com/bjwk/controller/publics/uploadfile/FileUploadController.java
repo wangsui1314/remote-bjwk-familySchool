@@ -14,7 +14,7 @@ import com.bjwk.utils.UploadFile;
 @RequestMapping("api/file")
 public class FileUploadController {
 	/**
-	 * 为客户端颁发上传凭证
+	 * 为客户端颁发七牛云上传凭证
 	 * @return
 	 */
 	@RequestMapping("getUpToken")

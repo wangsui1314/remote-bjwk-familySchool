@@ -36,10 +36,10 @@ public class UserTokenValidateAspect {
 	/**
 	 * 验证token
 	 * @param joinpoint
-	 * @throws Exception 
+	 * @throws Throwable 
 	 */
 	@Around("tokenAspect()")
-	public Object around(ProceedingJoinPoint joinpoint) throws Exception{
+	public Object around(ProceedingJoinPoint joinpoint) throws Throwable{
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String token=request.getParameter("token");
 		//Object result=null;
@@ -50,18 +50,21 @@ public class UserTokenValidateAspect {
 		Jedis  jedis=RedisClient.getInstance().getJedis();
 		String userName=jedis.hget("loginStatus", token);
 
-		if(userName!=null){
+		try {
+			if(userName!=null){
 
-			try {
-            joinpoint.proceed();//放行
-			} catch (Throwable e) {
-				e.printStackTrace();
-				throw new Exception();
+	            joinpoint.proceed();//放行
+				
+			}else{
+				dataWrapper.setCallStatus(CallStatusEnum.FAILED);
+				dataWrapper.setMsg("token验证失败");
 			}
-		}else{
-			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
-			dataWrapper.setMsg("token验证失败");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}finally {
+			jedis.close();
 		}
+		
 		return dataWrapper;
 	}	
 }

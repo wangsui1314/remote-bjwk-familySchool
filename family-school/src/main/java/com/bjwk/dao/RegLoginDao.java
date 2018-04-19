@@ -27,4 +27,7 @@ public interface RegLoginDao {
 	int updateUserPassWord(@Param("sign")String sign, @Param("phone")String phone);
 	
 	String getUserIdByUserName(@Param("userName")String userName);
+	
+	
+	int insrtLable(@Param("userId")String userId, @Param("array")String[] split);
 }

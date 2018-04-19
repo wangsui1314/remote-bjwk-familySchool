@@ -98,20 +98,20 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 */
 		//String isOnLine=jedis.hget("statusLogin", userName);
 		String token=(int)((Math.random()*9+1)*100000)+"";
-		
-			//利用redis hset存在覆盖 不存在插入的特性达到挤掉
-			
-			jedis.hset("loginStatus", token, userName);
-			jedis.hset("statusLogin", userName, token);
-			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-			dataWrapper.setData(user);
-			dataWrapper.setToken(token);
-			dataWrapper.setMsg("登录成功");
-		
+
+		//利用redis hset存在覆盖 不存在插入的特性达到挤掉
+
+		jedis.hset("loginStatus", token, userName);
+		jedis.hset("statusLogin", userName, token);
+		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
+		dataWrapper.setData(user);
+		dataWrapper.setToken(token);
+		dataWrapper.setMsg("登录成功");
+
 		jedis.close();
 		//为当前注册成功的用户分配一个token，放在redis中
 		_logger.info("当前用户："+userName+",分配的token为："+token);
-		
+
 
 		return dataWrapper;
 	}
@@ -183,17 +183,17 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 * 1 判断用户是否在线
 		 */
 		String userName =user.getUserName();
-	//	String isOnLine=jedis.hget("statusLogin", userName);
+		//	String isOnLine=jedis.hget("statusLogin", userName);
 		String newToken=(int)((Math.random()*9+1)*100000)+"";
-			//使已在线用户下线
-			jedis.hset("loginStatus", newToken, userName);
-			jedis.hset("statusLogin", userName, newToken);
-			jedis.close();
-			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-			dataWrapper.setData(user);
-			dataWrapper.setToken(newToken);
-			dataWrapper.setMsg("登录成功");
-			return dataWrapper;
+		//使已在线用户下线
+		jedis.hset("loginStatus", newToken, userName);
+		jedis.hset("statusLogin", userName, newToken);
+		jedis.close();
+		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
+		dataWrapper.setData(user);
+		dataWrapper.setToken(newToken);
+		dataWrapper.setMsg("登录成功");
+		return dataWrapper;
 	}
 
 	/**
@@ -207,11 +207,15 @@ public class RegLoginServiceImpl  implements RegLoginService{
 
 		Jedis  jedis=RedisClient.getInstance().getJedis();
 		String userName=jedis.hget("loginStatus", token);
-		if(userName==null){
-			dataWrapper.setMsg("令牌错误");
-			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
-			return dataWrapper;
-		}
+
+		String userId=regLoginDao.getUserIdByUserName(userName);
+		/**
+		 * 根据 lableId设置用户标签  爱好 职业等等
+		 */
+		//		String userId="1";
+		//		lableId="1,2,3,4";
+		regLoginDao.insrtLable(userId,lableId.split(","));
+		//更改基本信息
 		int state=regLoginDao.changeUserInfo(headPortrait,sex,nickName,lableId,background,styleSignTure,userName);
 		if(state!=0){
 			/**
@@ -244,10 +248,12 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		}
 		//修改
 		int state=regLoginDao.updateUserPassWord(sign,phone);
-
-		//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
-		//String token=jedis.hget("statusLogin", userName);
-		//long state=jedis.hdel("loginStatus", token);  
+        if(state>0) {
+        	//强制退出登录
+        	//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
+    		//String token=jedis.hget("statusLogin", userName);
+    		//long state=jedis.hdel("loginStatus", token);  
+        }
 		return null;
 	}
 

@@ -123,7 +123,7 @@ public class RegLoginController {
 	 */
 	@RequestMapping(value="_changeUserInfo")
 	@ResponseBody
-	@TokenValidate
+	//@TokenValidate
 	public DataWrapper<Void> changeUserInfo(
 			@RequestParam(value="token",required=false)String token,
 			@RequestParam(value="headPortrait",required=false)String headPortrait,

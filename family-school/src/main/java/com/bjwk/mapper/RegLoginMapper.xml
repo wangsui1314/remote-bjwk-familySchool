@@ -53,6 +53,20 @@
      select * from users where phone =#{phone} and sign=#{sign}
     </select>
     
+    
+    
+    
+    <!-- 更改用户标签 （存在更改，不存在则插入）ON DUPLICATE KEY UPDATE labe_id=#{item}-->
+    <insert id="insrtLable">
+     REPLACE into  user_lable(user_id,labe_id) 
+     values
+     <foreach collection="array" index="index" item="item"
+             separator="," >
+            (
+            #{userId},#{item} 
+            )
+        </foreach>
+    </insert>
     <update id="changeUserInfo">
       update users 
      <set>

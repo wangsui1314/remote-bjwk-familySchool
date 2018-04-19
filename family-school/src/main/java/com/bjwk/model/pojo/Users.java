@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+
 /**
  * 
  * @author liqitian
@@ -29,7 +30,6 @@ public class Users {
 	private String headPortrait;//头像
 	private Integer sex;//性别
 	private String nickName;//用户昵称
-	private Integer professionId;//职业id
 	private String background;//背景墙
 	private  String styleSignTure;//个性签名
 	private  String gesturePassWord;//手势密码
@@ -47,12 +47,7 @@ public class Users {
 	public void setBackground(String background) {
 		this.background = background;
 	}
-	public Integer getProfessionId() {
-		return professionId;
-	}
-	public void setProfessionId(Integer professionId) {
-		this.professionId = professionId;
-	}
+	
 	public Integer getSex() {
 		return sex;
 	}
@@ -150,7 +145,7 @@ public class Users {
 	public String toString() {
 		return "Users [userId=" + userId + ", userName=" + userName + ", passWord=" + passWord + ", phone=" + phone
 				+ ", email=" + email + ", sign=" + sign + ", coin=" + coin + ", headPortrait=" + headPortrait + ", sex="
-				+ sex + ", nickName=" + nickName + ", professionId=" + professionId + ", background=" + background
+				+ sex + ", nickName=" + nickName + "  background=" + background
 				+ ", styleSignTure=" + styleSignTure + ", gesturePassWord=" + gesturePassWord + ", gestrueIsOk="
 				+ gestrueIsOk + ", created=" + created + ", updateTime=" + updateTime + "]";
 	}

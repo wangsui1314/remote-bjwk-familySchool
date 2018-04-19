@@ -52,9 +52,7 @@ public class UserTokenValidateAspect {
 
 		try {
 			if(userName!=null){
-
 	            joinpoint.proceed();//放行
-				
 			}else{
 				dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 				dataWrapper.setMsg("token验证失败");

@@ -14,7 +14,7 @@ public enum ErrorCodeEnum implements Serializable {
     
     Register_Error("注册失败",4),
     Verify_Code_Error("验证码错误",5),
-   Verify_Code_10min("验证码10分钟",6),
+   Verify_Code_5min("验证码5分钟",6),
    Verify_Code_notExist("验证码不存在",7),
     OPERATION_ERROR("操作错误",50);
     private String label;

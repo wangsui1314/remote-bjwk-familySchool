@@ -35,7 +35,11 @@
 			<version>${spring.version}</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -147,7 +151,7 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+
 		<!-- rongcloud所需jar包 -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

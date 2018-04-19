@@ -3,16 +3,14 @@ package com.bjwk.controller.publics.reglogin;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bjwk.model.pojo.Users;
+import com.bjwk.controller.publics.VerifyCodeU;
 import com.bjwk.utils.DataWrapper;
 import com.bjwk.utils.ErrorCodeEnum;
 import com.bjwk.utils.sms.SMSUtils;
-import com.bjwk.utils.sms.VerifyCodeManager;
 
 /**
  * 
@@ -22,7 +20,7 @@ import com.bjwk.utils.sms.VerifyCodeManager;
  * 2018年3月23日 上午12:15:00
  */
 @Controller
-@RequestMapping("api/get")
+@RequestMapping("api/phone")
 public class GetVerificationCodeController {
 
 	private static final Log _logger = LogFactory.getLog(GetVerificationCodeController.class);
@@ -35,9 +33,9 @@ public class GetVerificationCodeController {
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 		_logger.info(phone+"：用户开始获取验证码....");
 		
-		String code = VerifyCodeManager.newPhoneCode(phone);
+		String code = new VerifyCodeU().newPhoneCode(phone);
 		if (code == null) {
-			dataWrapper.setErrorCode(ErrorCodeEnum.Verify_Code_10min);
+			dataWrapper.setErrorCode(ErrorCodeEnum.Verify_Code_5min);
 			dataWrapper.setMsg(dataWrapper.getErrorCode().getLabel());
 			return dataWrapper;
 		}

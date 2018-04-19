@@ -49,7 +49,7 @@ public class NearManImpl implements NearManService {
 	public DataWrapper<List<NearMan>> dearMan(NearMan nearMan) {
 		// TODO Auto-generated method stub
 		  DataWrapper<List<NearMan>>  dataWrapper=new DataWrapper<List<NearMan>>();
-		    int nowSortNum = (int) (new Date().getTime() / 1000);
+		    int nowSortNum = (int) (new Date().getTime() / 1000);//毫秒数
 	        // 此处仅为了减低排序的序号（ 获取缓存集合最大排序下标）
 	        int endIndex = nowSortNum - BASE_SORT_NUM;
 

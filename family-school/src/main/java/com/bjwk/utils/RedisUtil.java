@@ -16,6 +16,9 @@ public class RedisUtil {
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {  
         this.redisTemplate = redisTemplate;  
     }  
+    public RedisTemplate<String, Object> getRedisTemplate(){
+    	return redisTemplate;
+    }
     //=============================common============================  
     /** 
      * 指定缓存失效时间 

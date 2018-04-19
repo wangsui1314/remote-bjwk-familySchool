@@ -16,8 +16,8 @@ import com.bjwk.service.parent.nearman.NearManRedisService;
 public class NearManRedisImpl implements NearManRedisService {
 
 	 @Autowired
-
-    private RedisTemplate<String, String> redisTemplate;
+    private 
+    RedisTemplate<String, String> redisTemplate;
 
     @Override
     public String getOneStringByKey(String key) {
@@ -31,8 +31,11 @@ public class NearManRedisImpl implements NearManRedisService {
 
     @Override
     public Set<String> getSetByKeyAndScore(String key, int beginScore, int endScore) {
-         
+        /**
+         * 操作zSet
+         */
     	ZSetOperations<String, String> zset=redisTemplate.opsForZSet();
+    	//根据指定的score值得范围来移除成员
     	zset.removeRangeByScore(key, 1, beginScore - 1);
         Set<String> ll=redisTemplate.opsForZSet().rangeByScore(key, beginScore, endScore);
         return ll;

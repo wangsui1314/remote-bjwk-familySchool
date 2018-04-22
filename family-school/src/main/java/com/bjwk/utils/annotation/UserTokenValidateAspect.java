@@ -4,16 +4,16 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.bjwk.utils.BeanUtil;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
-import com.bjwk.utils.RedisClient;
+import com.bjwk.utils.RedisUtil;
 
-import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 /**
@@ -47,9 +47,11 @@ public class UserTokenValidateAspect {
 		/**
 		 * 1.验证该用户是否已登录，通过是否包含此token来判断
 		 */
-		Jedis  jedis=RedisClient.getInstance().getJedis();
-		String userName=jedis.hget("loginStatus", token);
-
+//		Jedis  jedis=RedisClient.getInstance().getJedis();
+//		String userName=jedis.hget("loginStatus", token);
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+    	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+    	String userName=(String) redisTemplate.opsForValue().get("token");
 		try {
 			if(userName!=null){
 	            joinpoint.proceed();//放行
@@ -60,7 +62,7 @@ public class UserTokenValidateAspect {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}finally {
-			jedis.close();
+//			jedis.close();
 		}
 		
 		return dataWrapper;

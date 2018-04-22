@@ -6,15 +6,18 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.bjwk.dao.RegLoginDao;
 import com.bjwk.model.pojo.Users;
 import com.bjwk.service.publics.reglogin.RegLoginService;
+import com.bjwk.utils.BeanUtil;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
 import com.bjwk.utils.ErrorCodeEnum;
-import com.bjwk.utils.RedisClient;
+import com.bjwk.utils.RedisUtil;
 import com.bjwk.utils.sms.VerifiCodeValidateUtil;
 
 import com.bjwk.zrongcloud.io.RongCloudKeyAndSecret;
@@ -91,7 +94,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			return dataWrapper;
 
 		}
-		Jedis  jedis=RedisClient.getInstance().getJedis();
+		    RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+		   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+		   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
 		/**
 		 * 挤掉策略
 		 * 1 判断用户是否在线
@@ -101,14 +106,13 @@ public class RegLoginServiceImpl  implements RegLoginService{
 
 		//利用redis hset存在覆盖 不存在插入的特性达到挤掉
 
-		jedis.hset("loginStatus", token, userName);
-		jedis.hset("statusLogin", userName, token);
+		ho.put("loginStatus", token, userName);
+		ho.put("statusLogin", userName, token);
 		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 		dataWrapper.setData(user);
 		dataWrapper.setToken(token);
 		dataWrapper.setMsg("登录成功");
 
-		jedis.close();
 		//为当前注册成功的用户分配一个token，放在redis中
 		_logger.info("当前用户："+userName+",分配的token为："+token);
 
@@ -120,9 +124,12 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	public DataWrapper<Users> gestureLogin(String token,String gesturePassWord) {
 		// TODO Auto-generated method stub
 		//根据toekn获取用户名
+		
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
-		Jedis  jedis=RedisClient.getInstance().getJedis();
-		String userName=jedis.hget("loginStatus", token);
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		String userName=(String) ho.get("loginStatus", token);
 
 		/*
 		 *  userName  和  gesturePassWord 入库检测 is True
@@ -143,9 +150,12 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	public DataWrapper<Void> logout(String token) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
-		Jedis  jedis=RedisClient.getInstance().getJedis();
-		jedis.hdel("statusLogin", jedis.hget("loginStatus", token));
-		long state=jedis.hdel("loginStatus", token);
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+	   	
+	   	ho.delete("statusLogin", ho.get("loginStatus", token));
+		long state=ho.delete("loginStatus", token);
 		if(state==0){
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			dataWrapper.setMsg("退出失败");
@@ -177,7 +187,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			return dataWrapper;
 
 		}
-		Jedis  jedis=RedisClient.getInstance().getJedis();
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
 		/**
 		 * 挤掉策略
 		 * 1 判断用户是否在线
@@ -186,9 +198,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		//	String isOnLine=jedis.hget("statusLogin", userName);
 		String newToken=(int)((Math.random()*9+1)*100000)+"";
 		//使已在线用户下线
-		jedis.hset("loginStatus", newToken, userName);
-		jedis.hset("statusLogin", userName, newToken);
-		jedis.close();
+		ho.put("loginStatus", newToken, userName);
+		ho.put("statusLogin", userName, newToken);
+		
 		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 		dataWrapper.setData(user);
 		dataWrapper.setToken(newToken);
@@ -205,8 +217,11 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 
-		Jedis  jedis=RedisClient.getInstance().getJedis();
-		String userName=jedis.hget("loginStatus", token);
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+	   	
+		String userName=(String) ho.get("loginStatus", token);
 
 		String userId=regLoginDao.getUserIdByUserName(userName);
 		/**
@@ -239,7 +254,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	public DataWrapper<Void> userUpdateToPassWord(String sign, String phone,String code) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
-		Jedis  jedis=RedisClient.getInstance().getJedis();
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
 
 		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(phone,code);
 		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
@@ -248,12 +265,12 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		}
 		//修改
 		int state=regLoginDao.updateUserPassWord(sign,phone);
-        if(state>0) {
-        	//强制退出登录
-        	//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
-    		//String token=jedis.hget("statusLogin", userName);
-    		//long state=jedis.hdel("loginStatus", token);  
-        }
+		if(state>0) {
+			//强制退出登录
+		//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
+			//String token=(String) ho.get("statusLogin", userName);
+			//long state=ho.delete("loginStatus", token);  
+		}
 		return null;
 	}
 

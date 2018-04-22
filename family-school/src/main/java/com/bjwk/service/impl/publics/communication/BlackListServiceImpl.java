@@ -1,13 +1,16 @@
 package com.bjwk.service.impl.publics.communication;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.bjwk.dao.RegLoginDao;
 import com.bjwk.service.publics.communication.BlackListService;
+import com.bjwk.utils.BeanUtil;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
-import com.bjwk.utils.RedisClient;
+import com.bjwk.utils.RedisUtil;
 import com.bjwk.zrongcloud.io.RongCloudKeyAndSecret;
 import com.bjwk.zrongcloud.io.rong.RongCloud;
 import com.bjwk.zrongcloud.io.rong.methods.user.blacklist.Blacklist;
@@ -15,7 +18,6 @@ import com.bjwk.zrongcloud.io.rong.models.Result;
 import com.bjwk.zrongcloud.io.rong.models.response.BlackListResult;
 import com.bjwk.zrongcloud.io.rong.models.user.UserModel;
 
-import redis.clients.jedis.Jedis;
 
 @Service("blackListServiceImpl")
 public class BlackListServiceImpl implements BlackListService{
@@ -28,8 +30,10 @@ public class BlackListServiceImpl implements BlackListService{
 	public DataWrapper<Void> addBlack(String token, String blackUserId) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void>  dataWrapper=new DataWrapper<Void>();
-		Jedis  jedis=RedisClient.getInstance().getJedis();
-		String userName=jedis.hget("loginStatus", token);
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		String userName=(String) ho.get("loginStatus", token);
 		if(userName==null){
 			dataWrapper.setMsg("令牌错误");
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
@@ -52,8 +56,10 @@ public class BlackListServiceImpl implements BlackListService{
 	public DataWrapper<Void> removeBlack(String token, String blackUserId) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void>  dataWrapper=new DataWrapper<Void>();
-		Jedis  jedis=RedisClient.getInstance().getJedis();
-		String userName=jedis.hget("loginStatus", token);
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		String userName=(String) ho.get("loginStatus", token);
 		if(userName==null){
 			dataWrapper.setMsg("令牌错误");
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
@@ -76,8 +82,10 @@ public class BlackListServiceImpl implements BlackListService{
 		// TODO Auto-generated method stub
 
 		DataWrapper<BlackListResult>  dataWrapper=new DataWrapper<BlackListResult>();
-		Jedis  jedis=RedisClient.getInstance().getJedis();
-		String userName=jedis.hget("loginStatus", token);
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		String userName=(String) ho.get("loginStatus", token);
 		if(userName==null){
 			dataWrapper.setMsg("令牌错误");
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);

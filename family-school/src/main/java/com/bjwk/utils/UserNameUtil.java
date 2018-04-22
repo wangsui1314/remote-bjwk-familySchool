@@ -1,5 +1,7 @@
 package com.bjwk.utils;
 
+import org.springframework.data.redis.core.RedisTemplate;
+
 import redis.clients.jedis.Jedis;
 /**
  * 
@@ -12,8 +14,9 @@ public class UserNameUtil {
     
    public static String getUserNameBytoken(String token) {
 	   
-	   Jedis jedis=RedisClient.getInstance().getJedis();
+	   RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
 	   
-	   return jedis.hget("loginStatus", token);
+	   return    (String) redisTemplate.opsForValue().get("token");
    }
 }

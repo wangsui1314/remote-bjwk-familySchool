@@ -2,120 +2,211 @@ package com.bjwk.service.impl.publics.nearman;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bjwk.controller.publics.nearman.ne.GeoCoordinate;
+import com.bjwk.dao.NearManDao;
 import com.bjwk.model.NearMan;
+import com.bjwk.model.NearUsers;
+import com.bjwk.model.pojo.Users;
 import com.bjwk.service.parent.nearman.NearManRedisService;
 import com.bjwk.service.parent.nearman.NearManService;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
+import com.bjwk.utils.RedisClient;
+
+import redis.clients.jedis.GeoRadiusResponse;
+import redis.clients.jedis.GeoUnit;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.params.geo.GeoRadiusParam;
 @Service
 public class NearManImpl implements NearManService {
-    
-	/** 2017-09-01 毫秒值/1000 (秒) **/
-    private static final int BASE_SORT_NUM = 1504195200;
 
-    /** 最大距离 **/
-    private static final int MAX_DISTANCE = 3000;
 
-    /** 8小时（秒） **/
-     static final int EIGHT_HOUR_SECOND = 60 * 60 * 8;
 
-    /** 附近的人缓存key值，p1-城市编号，p2-地区编号 **/
-    private static final String NEARBY_CACHE_KEY = "nearby_%s_%s";
+	@Autowired
+	private NearManDao nearManDao;
 
-    /** 附近的人用户缓存key值，p1-城市编号，p2-地区编号,p3-用户id **/
-     static final String NEARBY_USER_CACHE_KEY = "nearby_user_%s_%s_%s";
 
-    @Autowired
-    private NearManRedisService nearManRedisService;
-
-    // 线程池
-    @Autowired
-    private ThreadPoolTaskExecutor threadPool;
-
-    
 	/**
-	 * 附近的人
+	 * 附近的人实现：
+	 * 1检查附近的人里是否有该用户的存在
+	 *  如果有返回附近的人
+	 *  如果没有将该用户信息插入，返回附近的人
 	 */
 	@Override
-	public DataWrapper<List<NearMan>> dearMan(NearMan nearMan) {
+	public DataWrapper<List<NearUsers>> dearMan(NearMan nearMan) {
 		// TODO Auto-generated method stub
-		  DataWrapper<List<NearMan>>  dataWrapper=new DataWrapper<List<NearMan>>();
-		    int nowSortNum = (int) (new Date().getTime() / 1000);//毫秒数
-	        // 此处仅为了减低排序的序号（ 获取缓存集合最大排序下标）
-	        int endIndex = nowSortNum - BASE_SORT_NUM;
+		System.out.println(nearMan);
+		/**
+		 * 这里先取userId方便测试
+		 */
+		//存放user的集合
+		List<String> nearUserList=new ArrayList<String>();
+		String userId=nearMan.getUserId();
+		DataWrapper<List<NearUsers>>  dataWrapper=new DataWrapper<List<NearUsers>>();
+		Jedis jedis= RedisClient.getJedis();
+		/**
+		 * 检查附近的人里是否有该用户的存在
+		 * 由于Redis没有提供判断ZSet中某个键是否存在指定成员的函数
+		 * 这里用zrank返回有序集key中成员member的排名。其中有序集成员按score值递增(从小到大)顺序排列。检测用户
+		 */
 
-	        // 缓存key值
-	        String cacheKey = String.format(NEARBY_CACHE_KEY, nearMan.getCityCode(), nearMan.getAdCode());
+		try {
+			Long ranking=jedis.zrank("nearMan", userId);
 
-	        // 取同一城市地区&&八小时区间范围数据(八小时之前缓存数据会删除)
-	        Set<String> redisNearby = nearManRedisService.getSetByKeyAndScore(cacheKey, endIndex - EIGHT_HOUR_SECOND, endIndex);
-	        // 开启新线程写入数据
-	        threadPool.execute(new InsertCache(nearMan, cacheKey, endIndex));
+			//new map 为数据插入Distance
+			Map<String,Object> distanceMap=new HashMap<String,Object>();
+			/**
+			 * map化赛选条件
+			 *  "sex":"1",
+			 *  "other":"1,3,2,4,5,6,7"
+			 */
+			Map<String,String> map = (Map<String,String>)JSON.parse(nearMan.getScreen());
+			if(map==null) {
+				map=new HashMap<String,String>();
+			}
+			//
+			String str=map.get("other");
+			if(str==null) {
+				str=",";
+			}
+			System.out.println("rankingrankingranking   "+ranking);
+			if(ranking==null) {
+				//不存在
+				if(addReo(nearMan.getLongitude(),nearMan.getLatitude(),nearMan.getUserId())==null) {
+					dataWrapper.setMsg("失败");
+					return dataWrapper;
+				}else {
 
-	        if (redisNearby.size() == 0){
-	        	dataWrapper.setCallStatus(CallStatusEnum.FAILED);
-	        	dataWrapper.setMsg("附近查无用户");
-	        }
+					List<GeoRadiusResponse> gLsit= geoQuery(nearMan.getLongitude(),nearMan.getLatitude());
+					for(GeoRadiusResponse geo:gLsit){  
+						//排除自己
+						if(!geo.getMemberByString().equals(nearMan.getUserId())) {
+							nearUserList.add(geo.getMemberByString());
 
-	        List<NearMan> result = new ArrayList<NearMan>(redisNearby.size());
-	        boolean oneself = true;
-	        for (String item : redisNearby) {
-	        	NearMan cacheNearby = JSONObject.parseObject(item, NearMan.class);
-	            // 缓存里可能有用户自己
-	            if (cacheNearby.getUserId().intValue() == nearMan.getUserId())
-	                continue;
-	            //计算两经纬度点之间的距离
-	            double distance = countDistance(nearMan.getLongitude(), nearMan.getLatitude(), cacheNearby.getLongitude(),
-	                    cacheNearby.getLatitude());
-	            // 大于限定距离
-	            if (distance > MAX_DISTANCE)
-	                continue;
-	            
-	            result.add(new NearMan(cacheNearby.getUserId(), cacheNearby.getName(), distance));
-	            oneself = false;
-	        }
-	        if (oneself){
-	        	dataWrapper.setCallStatus(CallStatusEnum.FAILED);
-	        	dataWrapper.setMsg("附近查无用户");
-	        	return dataWrapper;
-	        }
-	        dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
-	        dataWrapper.setMsg("获取成功");
-	        dataWrapper.setData(result);
-	        return dataWrapper;	}
+							distanceMap.put(geo.getMemberByString(), geo.getDistance());
+						}
+						System.out.println(geo.getMemberByString()); //主键
+						System.out.println(geo.getDistance());  //距离多少米  
+					}
+
+					if(nearUserList.isEmpty()) {
+						dataWrapper.setMsg("没有附近的人");
+						return dataWrapper;
+					}
+					List<NearUsers> list=nearManDao.queryNearMan(nearUserList, map.get("sex"),str.split(",")  );//附近的人   对象集合
+
+					System.out.println(list);
+					insertDistance(list,distanceMap);
+					dataWrapper.setData(list);
+					return dataWrapper;
+				}
+			}else {
+				//存在
+				List<GeoRadiusResponse> gLsit= geoQuery(nearMan.getLongitude(),nearMan.getLatitude());
+				for(GeoRadiusResponse geo:gLsit){  
+					//排除自己
+					if(!geo.getMemberByString().equals(nearMan.getUserId())) {
+						nearUserList.add(geo.getMemberByString());
+						distanceMap.put(geo.getMemberByString(), geo.getDistance());
+					}
+					System.out.println(geo.getMemberByString()); //主键
+					System.out.println(geo.getDistance());  //距离多少米  
+				}
+				/**
+				 * 如果附近的人为empty 则直接返回
+				 */
+				if(nearUserList.isEmpty()) {
+					dataWrapper.setMsg("没有附近的人");
+					return dataWrapper;
+				}
+				List<NearUsers> list=nearManDao.queryNearMan(nearUserList, map.get("sex"),str.split(",")  );//附近的人   对象集合
+				
+				System.out.println(distanceMap);
+				insertDistance(list,distanceMap);
+				dataWrapper.setData(list);
+				return dataWrapper;
+
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}finally {
+			jedis.close();
+		}
+		return null;
+	}
+	private List<NearUsers>  insertDistance(List<NearUsers> mapList,Map<String,Object> map) {
+         for(String userId:map.keySet()) {
+//        	 for(NearUsers nearUser:mapList) {
+//        		 if(userId.equals(nearUser.getUserId())) {
+//        			 System.out.println(userId);
+//        			 nearUser.setDistance((Double) map.get("userId"));
+//        		 }
+//        	 }
+        	 for(int i=0;i<mapList.size();i++) {
+        		 if(userId.equals(mapList.get(i).getUserId())) {
+        			 System.out.println(userId+"   userIduserIduserIduserIduserId");
+        			 System.out.println((Double)map.get("userId"));
+        			 mapList.get(i).setDistance((Double)map.get(userId));
+        			 System.out.println(mapList+"   mapList");
+        		 }
+        	 }
+         }
+         return mapList;
+	}
+
 	/**
-     * 计算两经纬度点之间的距离（单位：米）
-     * 
-     * @param longitude1
-     *            坐标1经度
-     * @param latitude1
-     *            坐标1纬度
-     * @param longitude2
-     *            坐标2经度
-     * @param latitude2
-     *            坐标1纬度
-     * @return
-     */
-    private static double countDistance(double longitude1, double latitude1, double longitude2, double latitude2) {
-        double radLat1 = Math.toRadians(latitude1);
-        double radLat2 = Math.toRadians(latitude2);
-        double a = radLat1 - radLat2;
-        double b = Math.toRadians(longitude1) - Math.toRadians(longitude2);
-        double s = 2 * Math.asin(Math.sqrt(
-                Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
-        s = s * 6378137.0;
-        s = Math.round(s * 10000) / 10000;
-        return s;
-    }
-}
+	 * 添加坐标
+	 * key 经度  维度  距离
+	 * return m 表示单位为米*/
+	public static Long addReo(double lng, double lat,String userId) {
+		Jedis jedis= RedisClient.getJedis();
+		try {
+			//第一个参数可以理解为表名
+			return jedis.geoadd("nearMan",lng, lat,userId);
+		} catch (Exception e) {
+			e.getStackTrace();
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return null;
+	}
 
+
+	/**
+	 * 查询附近人
+	 * key 经度  维度  距离
+	 * return GeoRadiusResponse*/
+	public static List<GeoRadiusResponse> geoQuery(double lng, double lat) {
+		Jedis jedis= RedisClient.getJedis();
+		try {
+			// jedis.zrem(key, members)
+			//200F GeoUnit.KM表示km 
+			return jedis.georadius("nearMan",lng,lat,200L,GeoUnit.KM, 
+					GeoRadiusParam.geoRadiusParam().withDist().sortAscending()
+					);
+		} catch (Exception e) {
+			e.getStackTrace();
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return null;
+	}
+}
 

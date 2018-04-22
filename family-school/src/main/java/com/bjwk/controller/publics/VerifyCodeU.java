@@ -44,8 +44,7 @@ public class VerifyCodeU {
         Date nowTime = new Date();
         if("overdue".equals(oldCode)||"noCode".equals(oldCode)){
         	System.out.println(code+ TimeUtil.changeDateToString(nowTime));
-        	
-        	redisTemplate.opsForHash().put("USER_CODE_MAP",phoneNum,TimeUtil.changeDateToString(nowTime));
+        	redisTemplate.opsForHash().put("USER_CODE_MAP",phoneNum,code+TimeUtil.changeDateToString(nowTime));
         	
            // USER_CODE_MAP.put(phoneNum,code+ TimeUtil.changeDateToString(nowTime));
             return code;
@@ -57,11 +56,14 @@ public class VerifyCodeU {
     public  String getPhoneCode(String phoneNum){
     	RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
     	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+    	
         try {
             System.out.println(phoneNum+":  "+"contain:"+redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum));
             
             if(redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum)){
+            	System.out.println( "    8888"   +redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum));
                 if (TimeUtil.timeBetween(TimeUtil.changeStringToDate(((String) redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum)).substring(4)), new Date()) / (60 * 1000) > minute){
+
                     removePhoneCodeByPhoneNum(phoneNum);
                     return "overdue";
                 }else{
@@ -88,8 +90,7 @@ public class VerifyCodeU {
     	RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
     	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
         try {
-        	System.out.println(redisTemplate);
-        	System.out.println(redisTemplate);
+        
            // System.out.println("contain:"+redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum));
             if(redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum)){
                 if (checkTime(TimeUtil.changeStringToDate(((String) redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum)).substring(4)), new Date())> 50){

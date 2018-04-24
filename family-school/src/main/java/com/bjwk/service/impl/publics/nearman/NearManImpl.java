@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bjwk.controller.publics.nearman.ne.GeoCoordinate;
 import com.bjwk.dao.NearManDao;
 import com.bjwk.model.NearMan;
 import com.bjwk.model.NearUsers;
@@ -113,34 +112,38 @@ public class NearManImpl implements NearManService {
 					dataWrapper.setData(list);
 					return dataWrapper;
 				}
-			}else {
-				//存在
-				List<GeoRadiusResponse> gLsit= geoQuery(nearMan.getLongitude(),nearMan.getLatitude());
-				for(GeoRadiusResponse geo:gLsit){  
-					//排除自己
-					if(!geo.getMemberByString().equals(nearMan.getUserId())) {
-						nearUserList.add(geo.getMemberByString());
-						distanceMap.put(geo.getMemberByString(), geo.getDistance());
-					}
-					System.out.println(geo.getMemberByString()); //主键
-					System.out.println(geo.getDistance());  //距离多少米  
-				}
-				/**
-				 * 如果附近的人为empty 则直接返回
-				 */
-				if(nearUserList.isEmpty()) {
-					dataWrapper.setMsg("没有附近的人");
-					return dataWrapper;
-				}
-				List<NearUsers> list=nearManDao.queryNearMan(nearUserList, map.get("sex"),str.split(",")  );//附近的人   对象集合
-				
-				System.out.println(distanceMap);
-				insertDistance(list,distanceMap);
-				dataWrapper.setData(list);
-				return dataWrapper;
-
-
 			}
+			/**
+			 * 避免用户中途更改个人信息  
+			 */
+//			}else {
+//				//存在
+//				List<GeoRadiusResponse> gLsit= geoQuery(nearMan.getLongitude(),nearMan.getLatitude());
+//				for(GeoRadiusResponse geo:gLsit){  
+//					//排除自己
+//					if(!geo.getMemberByString().equals(nearMan.getUserId())) {
+//						nearUserList.add(geo.getMemberByString());
+//						distanceMap.put(geo.getMemberByString(), geo.getDistance());
+//					}
+//					System.out.println(geo.getMemberByString()); //主键
+//					System.out.println(geo.getDistance());  //距离多少米  
+//				}
+//				/**
+//				 * 如果附近的人为empty 则直接返回
+//				 */
+//				if(nearUserList.isEmpty()) {
+//					dataWrapper.setMsg("没有附近的人");
+//					return dataWrapper;
+//				}
+//				List<NearUsers> list=nearManDao.queryNearMan(nearUserList, map.get("sex"),str.split(",")  );//附近的人   对象集合
+//				
+//				System.out.println(distanceMap);
+//				insertDistance(list,distanceMap);
+//				dataWrapper.setData(list);
+//				return dataWrapper;
+//
+//
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO: handle exception

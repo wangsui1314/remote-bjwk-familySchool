@@ -40,6 +40,7 @@ public class UserTokenValidateAspect {
 	 */
 	@Around("tokenAspect()")
 	public Object around(ProceedingJoinPoint joinpoint) throws Throwable{
+		
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String token=request.getParameter("token");
 		//Object result=null;

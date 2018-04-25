@@ -178,8 +178,14 @@ public class NearManImpl implements NearManService {
 	 * return m 表示单位为米*/
 	public static Long addReo(double lng, double lat,String userId) {
 		Jedis jedis= RedisClient.getJedis();
+		jedis.select(1);
 		try {
-			//第一个参数可以理解为表名
+			/**
+			 * 根据 key(userId) 失效清除nearMan数据
+			 */
+			
+			jedis.set(userId, userId);
+			jedis.expire(userId, 60);
 			return jedis.geoadd("nearMan",lng, lat,userId);
 		} catch (Exception e) {
 			e.getStackTrace();
@@ -197,6 +203,7 @@ public class NearManImpl implements NearManService {
 	 * return GeoRadiusResponse*/
 	public static List<GeoRadiusResponse> geoQuery(double lng, double lat) {
 		Jedis jedis= RedisClient.getJedis();
+		jedis.select(1);
 		try {
 			// jedis.zrem(key, members)
 			//200F GeoUnit.KM表示km 

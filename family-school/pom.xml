@@ -260,7 +260,7 @@
 
 		<plugins>
 			<!-- path 是访问应用的路径 port 是tomcat 的端口号 uriEncoding URL按UTF-8进行编码，这样就解决了中文参数乱码。 
-				Server 指定tomcat名称。 -->
+				Server 指定tomcat名称。 11-->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>

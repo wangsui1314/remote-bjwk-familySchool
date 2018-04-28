@@ -16,8 +16,8 @@ public class KeyExpiredListener   extends JedisPubSub{
     public void onPMessage(String pattern, String channel, String message) {         
         Jedis jedis=RedisClient.getJedis();
     	jedis.select(1);
-    	jedis.zrem("nearman", message);
+    	jedis.zrem("nearMan", message);
     	jedis.close();
-    	System.out.println("附近的人...:"+message+"长时间未活动失效....");
+    	System.out.println("附近的人...用户:"+message+"长时间未活动位置已失效....");
     }  
 }

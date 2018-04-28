@@ -105,9 +105,10 @@ public class NearManImpl implements NearManService {
 						dataWrapper.setMsg("没有附近的人");
 						return dataWrapper;
 					}
+					System.out.println("不添加条件的结果集是："+nearUserList);
 					List<NearUsers> list=nearManDao.queryNearMan(nearUserList, map.get("sex"),str.split(",")  );//附近的人   对象集合
 
-					System.out.println(list);
+					System.out.println("添加条件的结果集是:"+list);
 					insertDistance(list,distanceMap);
 					dataWrapper.setData(list);
 					return dataWrapper;

@@ -23,7 +23,7 @@
    
   <select id="queryNearMan" resultMap="queryNearMan">
 		 select jjuser.*,lable.lable_name,lable_type from users jjuser left join user_lable userlable on  jjuser.user_id=userlable.user_id
-		 join lable lable on userlable.labe_id=lable.id
+		left join lable lable on userlable.labe_id=lable.id
 		 <where>
             jjuser.user_id in
             <foreach item="userId" collection="nearUserList" separator="," open="(" close=")" index="">

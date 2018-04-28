@@ -185,7 +185,7 @@ public class NearManImpl implements NearManService {
 			 */
 			
 			jedis.set(userId, userId);
-			jedis.expire(userId, 60);
+			jedis.expire(userId, 30);
 			return jedis.geoadd("nearMan",lng, lat,userId);
 		} catch (Exception e) {
 			e.getStackTrace();

@@ -35,11 +35,13 @@
 		</property>
 	</bean>
 
-    <!-- my bean -->
-    <bean id="exceptionResolver" class="com.bjwk.utils.exception.ExceptionHandler"/> 
-    
-        <bean id="Subscriber" class="com.bjwk.controller.publics.nearman.nearuserexpire.Subscriber" init-method="afterPropertiesSet"></bean>
-    
+	<!-- my bean -->
+	<bean id="exceptionResolver" class="com.bjwk.utils.exception.ExceptionHandler" />
+
+	<bean id="Subscriber"
+		class="com.bjwk.controller.publics.nearman.nearuserexpire.Subscriber"
+		init-method="afterPropertiesSet"></bean>
+
 	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -63,8 +65,7 @@
 			<value>4096</value>
 		</property>
 	</bean>
-	
-	  <bean id="BeanUtil" class="com.bjwk.utils.BeanUtil"></bean>
-    
-    
+
+	<bean id="BeanUtil" class="com.bjwk.utils.BeanUtil"></bean>
+
 </beans>

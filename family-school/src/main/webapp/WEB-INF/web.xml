@@ -35,8 +35,6 @@
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
     
-	
-
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

@@ -94,9 +94,9 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			return dataWrapper;
 
 		}
-		    RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-		   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-		   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+		RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+		HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
 		/**
 		 * 挤掉策略
 		 * 1 判断用户是否在线
@@ -124,11 +124,11 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	public DataWrapper<Users> gestureLogin(String token,String gesturePassWord) {
 		// TODO Auto-generated method stub
 		//根据toekn获取用户名
-		
+
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
 		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+		HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
 		String userName=(String) ho.get("loginStatus", token);
 
 		/*
@@ -151,10 +151,10 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
-	   	
-	   	ho.delete("statusLogin", ho.get("loginStatus", token));
+		RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+		HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+
+		ho.delete("statusLogin", ho.get("loginStatus", token));
 		long state=ho.delete("loginStatus", token);
 		if(state==0){
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
@@ -188,8 +188,8 @@ public class RegLoginServiceImpl  implements RegLoginService{
 
 		}
 		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+		HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
 		/**
 		 * 挤掉策略
 		 * 1 判断用户是否在线
@@ -200,7 +200,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		//使已在线用户下线
 		ho.put("loginStatus", newToken, userName);
 		ho.put("statusLogin", userName, newToken);
-		
+
 		dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 		dataWrapper.setData(user);
 		dataWrapper.setToken(newToken);
@@ -218,9 +218,8 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 
 		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
-	   	
+		HashOperations<String, Object, Object> ho=redisUtil.getRedisTemplate().opsForHash();
+
 		String userName=(String) ho.get("loginStatus", token);
 
 		String userId=regLoginDao.getUserIdByUserName(userName);
@@ -229,9 +228,11 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 */
 		//		String userId="1";
 		//		lableId="1,2,3,4";
-		regLoginDao.insrtLable(userId,lableId.split(","));
+		if(lableId!=null) {
+			regLoginDao.insrtLable(userId,lableId.split(","));
+		}
 		//更改基本信息
-		int state=regLoginDao.changeUserInfo(headPortrait,sex,nickName,lableId,background,styleSignTure,userName);
+		int state=regLoginDao.changeUserInfo(headPortrait,sex,nickName,background,styleSignTure,userName);
 		if(state!=0){
 			/**
 			 * 更改rongcloud 用户信息主要包括昵称与头像
@@ -255,8 +256,8 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-	   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-	   	HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
+		RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+		HashOperations<String, Object, Object> ho=	redisTemplate.opsForHash();
 
 		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(phone,code);
 		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
@@ -267,12 +268,33 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		int state=regLoginDao.updateUserPassWord(sign,phone);
 		if(state>0) {
 			//强制退出登录
-		//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
+			//String userName=regLoginDao.getUserNameByPhoneAndSign(sign,phone);
 			//String token=(String) ho.get("statusLogin", userName);
 			//long state=ho.delete("loginStatus", token);  
 		}
 		return null;
 	}
+
+	/**
+	 * 用户详情
+	 */
+	@Override
+	public DataWrapper<Users> queryUserInfoDetails(String token,Integer sign) {
+		// TODO Auto-generated method stub
+		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
+		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
+		HashOperations<String, Object, Object> ho=redisUtil.getRedisTemplate().opsForHash();
+		String userName=(String) ho.get("loginStatus", token);
+		if(userName==null) {
+			dataWrapper.setMsg("请登录");
+			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
+			return dataWrapper;
+		}
+		System.out.println(userName+"  "+sign);
+		dataWrapper.setData(regLoginDao.queryUserInfoDetails(userName,sign));
+		return dataWrapper;
+	}
+
 
 	/**
 	 * API 文档: http://rongcloud.github.io/server-sdk-nodejs/docs/v1/user/user.html#register
@@ -338,4 +360,6 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		map.put("headPortrait", headPortrait);
 		return map;
 	}
+
+
 }

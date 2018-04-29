@@ -20,7 +20,6 @@ public interface RegLoginDao {
 	
 	int changeUserInfo(@Param("headPortrait")String headPortrait, @Param("sex")String sex,
 			@Param("nickName") String nickName,
-			@Param("professionId")String professionId,
 			@Param("background")String background, @Param("styleSignTure")String styleSignTure,
 			@Param("userName")String userName);
 	
@@ -30,4 +29,6 @@ public interface RegLoginDao {
 	
 	
 	int insrtLable(@Param("userId")String userId, @Param("array")String[] split);
+	
+	Users  queryUserInfoDetails(@Param("userName")String userName,@Param("sign") Integer sign);
 }

@@ -2,20 +2,20 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bjwk.dao.LuckyDrawDao">
+<mapper namespace="com.bjwk.dao.LableManageDao">
    
    <insert id="insertLable">
-     insert into lable(lable_name) values(#{lableName})
+     insert into lable(lable_name,lable_type) values(#{lableName},#{lableType})
    </insert>
    
    
    <delete id="deleteLable">
-     delete from lable where lable_id=#{lableId}
+     delete from lable where id=#{lableId}
    </delete>
    
    
    <delete id="deleteLableToUserLable">
-     delete from user_lable where lable_id=#{lableId}
+     delete from user_lable where id=#{lableId}
    </delete>
    
    

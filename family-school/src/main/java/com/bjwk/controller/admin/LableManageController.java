@@ -1,6 +1,7 @@
 package com.bjwk.controller.admin;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bjwk.service.admin.LableManageService;
 import com.bjwk.utils.DataWrapper;
+import com.bjwk.utils.annotation.AdminTokenValidate;
 
 @Controller
 @RequestMapping("api/lableManage")
@@ -26,10 +28,11 @@ public class LableManageController {
 	@ResponseBody
 	public DataWrapper<Void> insertLable(
 			@RequestParam(value="adminToken",required=false) String adminToken,
-			@RequestParam(value="labeName",required=true) String labeName
+			@RequestParam(value="labeName",required=true) String labeName,
+			@RequestParam(value="lableType",required=true) String lableType
 			){
 		
-		return lableManageService.insertLable(adminToken,labeName);
+		return lableManageService.insertLable(adminToken,labeName, lableType);
 	}
 	/**
 	 * @param 
@@ -38,6 +41,7 @@ public class LableManageController {
 	 */
 	@RequestMapping(value="_deleteLable")
 	@ResponseBody
+	@AdminTokenValidate
 	public DataWrapper<Void> deleteLable(
 			@RequestParam(value="adminToken",required=false) String adminToken,
 			@RequestParam(value="lableId",required=true) int lableId
@@ -52,7 +56,7 @@ public class LableManageController {
 	 */
 	@RequestMapping(value="_querLables")
 	@ResponseBody
-	public DataWrapper<HashMap<String,Object>> querLables(
+	public DataWrapper<List<HashMap<String, Object>>> querLables(
 			){
 		return lableManageService.querLables();
 	}

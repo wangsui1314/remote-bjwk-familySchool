@@ -4,7 +4,6 @@ package com.bjwk.controller.publics.reglogin;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bjwk.model.pojo.Users;
 import com.bjwk.service.publics.reglogin.RegLoginService;
-import com.bjwk.utils.BeanUtil;
 import com.bjwk.utils.DataWrapper;
-import com.bjwk.utils.RedisUtil;
+import com.bjwk.utils.annotation.TestLog;
 import com.bjwk.utils.annotation.TokenValidate;
 
-import redis.clients.jedis.Jedis;
 
 
 /**
@@ -125,7 +122,7 @@ public class RegLoginController {
 	 */
 	@RequestMapping(value="_changeUserInfo")
 	@ResponseBody
-	//@TokenValidate
+	@TokenValidate
 	public DataWrapper<Void> changeUserInfo(
 			@RequestParam(value="token",required=false)String token,
 			@RequestParam(value="headPortrait",required=false)String headPortrait,
@@ -183,4 +180,26 @@ public class RegLoginController {
 //		dataWrapper.setMsg("1234");
 //		return  dataWrapper;
 //	}
+	
+	/**
+	 *
+	 * @param user
+	 * @return
+	 * @describe 管理员修改用户
+	 */
+	@RequestMapping(value="_queryUserInfoDetails")
+	@ResponseBody
+	public DataWrapper<Users> queryUserInfoDetails(
+			@RequestParam(value="token",required=false)String token,
+			@RequestParam(value="sign",required=false)Integer sign
+			){
+		return regLoginService.queryUserInfoDetails(token,sign);
+	}
+	
+	  @TestLog(name = "测试的AAAAAAAAAAAAAA")  
+	  @RequestMapping(value = "/UserDemo")  
+	  public @ResponseBody Object UserDemo() {
+		return null;
+	  }  
+
 }

@@ -22,4 +22,6 @@ public interface RegLoginService {
 	DataWrapper<Void> changeUserInfo(String token, String headPortrait, String sex, String professionId,
 			String background, String styleSignTure, String nickName);
 
+	DataWrapper<Users> queryUserInfoDetails(String token,Integer sign);
+
 }

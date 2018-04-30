@@ -14,8 +14,9 @@ import com.bjwk.dao.UtilsDao;
 import com.bjwk.utils.BeanUtil;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
-import com.bjwk.utils.RedisUtil;
+import com.bjwk.utils.RedisClient;
 
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 /**
@@ -53,11 +54,9 @@ public class AdminTokenValidateAspect {
 		/**
 		 * 1.验证该管理员是否已登录，是否有权限进行操作
 		 */
-//		Jedis  jedis=RedisClient.getInstance().getJedis();
-//		String userName=jedis.hget("loginStatus", token);
-		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-    	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-    	String userName=(String) redisTemplate.opsForValue().get(adminToken);
+     	Jedis  jedis=RedisClient.getJedis();
+		String userName=jedis.hget("loginStatus", adminToken);
+		
     	
     	if(userName==null) {
     		dataWrapper.setCallStatus(CallStatusEnum.FAILED);

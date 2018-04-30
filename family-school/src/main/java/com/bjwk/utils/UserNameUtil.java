@@ -13,10 +13,9 @@ import redis.clients.jedis.Jedis;
 public class UserNameUtil {
     
    public static String getUserNameBytoken(String token) {
-	   
-	   RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-   	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-	   
-	   return    (String) redisTemplate.opsForValue().get("token");
+	  Jedis jedis=RedisClient.getJedis();
+	 String userName=jedis.hget("loginStatus",token);
+	 jedis.close();
+	   return   userName ;
    }
 }

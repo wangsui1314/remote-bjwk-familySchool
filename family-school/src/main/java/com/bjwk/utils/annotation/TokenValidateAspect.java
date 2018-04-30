@@ -12,8 +12,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.bjwk.utils.BeanUtil;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
-import com.bjwk.utils.RedisUtil;
+import com.bjwk.utils.RedisClient;
 
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 /**
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Aspect
 @Component
-public class UserTokenValidateAspect {
+public class TokenValidateAspect {
 
 	//token验证层controller切入点
 	@Pointcut(value="@annotation(com.bjwk.utils.annotation.TokenValidate)")
@@ -42,16 +43,14 @@ public class UserTokenValidateAspect {
 		 System.out.println("12321312");
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String token=request.getParameter("token");
+		 System.out.println(token);
 		//Object result=null;
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();
 		/**
 		 * 1.验证该用户是否已登录，通过是否包含此token来判断
 		 */
-//		Jedis  jedis=RedisClient.getInstance().getJedis();
-//		String userName=jedis.hget("loginStatus", token);
-		RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-    	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-    	String userName=(String) redisTemplate.opsForValue().get("token");
+		Jedis  jedis=RedisClient.getJedis();
+		String userName=jedis.hget("loginStatus", token);
 		try {
 			if(userName!=null){
 	            joinpoint.proceed();//放行

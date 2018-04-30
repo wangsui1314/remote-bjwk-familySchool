@@ -10,8 +10,8 @@
        <selectKey resultType="int" order="AFTER" keyProperty="userId">
           SELECT LAST_INSERT_ID()
       </selectKey>
-      insert into users(user_name,pass_word,email,sign,head_portrait,sex,nick_name,created) values(
-      #{userName},#{passWord},#{email},#{sign},#{headPortrait},#{sex},#{nickName},now())
+      insert into users(user_name,pass_word,email,sign,head_portrait,sex,nick_name) values(
+      #{userName},#{passWord},#{email},#{sign},#{headPortrait},#{sex},#{nickName})
     </insert>
     
     <select id="queryUserIsTrue" resultType="String">
@@ -27,8 +27,7 @@
         <result column="user_name" property="userName"/>
         <result column="eamil" property="email"/>
         <result column="phone" property="phone"/>
-        <result column="sign" property="sign"/>
-        
+        <result column="sign" property="sign"/>  
         <result column="coin" property="coin"/>
         <result column="head_portrait" property="headPortrait"/>
         <result column="profession_id" property="professionId"/>
@@ -37,7 +36,6 @@
         <result column="background" property="background"/>
         <result column="style_signature" property="styleSignTure"/>
         <result column="gestrue_isok" property="gestrueIsOk"/>
-        
         <result column="created" property="created"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
@@ -79,9 +77,6 @@
       <if test="nickName !=null and nickName !=''">
        nick_name=#{nickName},
       </if>
-       <if test="professionId!=null and professionId!=''">
-       profession_id=#{professionId} , 
-      </if>
       <if test="background!=null and background!=''">
        background=#{background} , 
       </if>
@@ -93,4 +88,38 @@
         user_name =#{userName}
      </where>
     </update>
+   
+   
+   <resultMap type="com.bjwk.model.pojo.Users" id="queryUserInfoDetails">
+        <id column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="sign" property="sign"/>  
+        <result column="coin" property="coin"/>
+        <result column="head_portrait" property="headPortrait"/>
+        <result column="sex" property="sex"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="background" property="background"/>
+        <result column="style_signature" property="styleSignTure"/>
+        <result column="gestrue_isok" property="gestrueIsOk"/>
+        <result column="created" property="created"/>
+        <result column="update_time" property="updateTime"/>
+        <!-- lable -->
+        
+         <collection property="labelMap" ofType="java.util.Map">   
+            <result column="lable_name" property="lableName"/>  
+            <result column="lable_type" property="lableType"/> 
+        </collection>  
+    </resultMap>
+     
+    <!--  用户详情-->
+    <select id="queryUserInfoDetails" resultMap="queryUserInfoDetails">
+      select user.user_id,user.user_name,user.email,user.phone,user.sign,user.coin,user.head_portrait,
+      user.sex,user.nick_name,user.background,user.style_signature,user.created,user.update_time,user.gestrue_isok,
+      lable.lable_name,lable.lable_type
+       from users user  left join user_lable userlable on user.user_id=userlable.user_id 
+      left join lable lable on userlable.labe_id=lable.id
+      where user.user_name=#{userName} and user.sign=#{sign}
+    </select>
 </mapper>       

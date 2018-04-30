@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bjwk.dao.ArticleDao">
+	<resultMap id="BaseResultMap" type="com.bjwk.model.Article">
+		<id column="article_id" property="articleId" />
+		<result column="article_title" property="articleTitle" />
+		<result column="article_content" property="articleContent" />
+		<result column="article_author" property="articleAuthor" />
+		<result column="article_from" property="articleFrom" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="article_download" property="articleDownload" />
+		<result column="browse_volume" property="browseVolume" />
+		<result column="category_type" property="categoryType" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		article_id,article_title,article_content,article_author,article_from,create_time,update_time,article_download,browse_volume,category_type
+	</sql>
+	<sql id="Base_insert_List">
+		article_title,article_content,article_author,article_from,create_time,category_type
+	</sql>
+	<insert id="insertArticle" parameterType="com.bjwk.model.Article">
+		insert into
+		article(article_title,article_content,article_author,article_from,create_time,category_type)
+		values
+		( #{articleTitle},
+		#{articleContent},
+		#{articleAuthor},
+		#{articleFrom},
+		now(),
+		#{categoryType})
+	</insert>
+
+	<delete id="deleteArticleById" parameterType="int">
+		delete
+		from article
+		<where>
+			article_id = #{articleId}
+		</where>
+
+	</delete>
+
+
+
+	<update id="updateArticleById" parameterType="com.bjwk.model.Article">
+		update
+		article
+		<set>
+			<if test="articleTitle !=null and articleTitle !=''">
+				article_title=#{articleTitle},
+			</if>
+			<if test="articleContent !=null and articleContent !=''">
+				article_content=#{articleContent},
+			</if>
+
+			<if test="articleAuthor !=null and articleAuthor !=''">
+				article_author=#{articleAuthor},
+			</if>
+
+			<if test="articleFrom !=null and articleFrom !=''">
+				article_from=#{articleFrom},
+			</if>
+			update_time=now(),
+			<if test="categoryType !=null and categoryType !=''">
+				category_type=#{categoryType}
+			</if>
+
+		</set>
+		<where>article_id = #{articleId}</where>
+	</update>
+
+	<select id="getCount" parameterType="java.lang.String" resultType="int">
+		select count(*)
+		from article
+		<where>
+			category_type= #{categoryType,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<select id="findArticle" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from article
+		where category_type= #{categoryType}
+		limit ${currentNumber},${numberPerPage}
+	</select>
+
+	<select id="findArticleById" parameterType="int" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from article
+		where article_id = #{articleId};
+
+	</select>
+
+	<update id="addBrowseVolume" parameterType="int">
+		update
+		article
+		set
+		browse_volume=browse_volume+1
+		where article_id = #{articleId};
+	</update>
+
+</mapper>

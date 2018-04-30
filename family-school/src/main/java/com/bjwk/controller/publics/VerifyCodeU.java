@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.bjwk.utils.BeanUtil;
-import com.bjwk.utils.RedisUtil;
+import com.bjwk.utils.RedisClient;
 import com.bjwk.utils.TimeUtil;
+
+import redis.clients.jedis.Jedis;
 
 
 /**
@@ -34,8 +36,7 @@ public class VerifyCodeU {
 
     
     public  String newPhoneCode(String phoneNum) {
-    	RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-    	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+    	Jedis jedis=RedisClient.getJedis();
     	
         Random random = new Random();
         int a = random.nextInt(8999)+1000;
@@ -44,7 +45,7 @@ public class VerifyCodeU {
         Date nowTime = new Date();
         if("overdue".equals(oldCode)||"noCode".equals(oldCode)){
         	System.out.println(code+ TimeUtil.changeDateToString(nowTime));
-        	redisTemplate.opsForHash().put("USER_CODE_MAP",phoneNum,code+TimeUtil.changeDateToString(nowTime));
+        	jedis.hset("USER_CODE_MAP",phoneNum,code+TimeUtil.changeDateToString(nowTime));
         	
            // USER_CODE_MAP.put(phoneNum,code+ TimeUtil.changeDateToString(nowTime));
             return code;
@@ -54,20 +55,19 @@ public class VerifyCodeU {
     }
 
     public  String getPhoneCode(String phoneNum){
-    	RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-    	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+    	Jedis jedis=RedisClient.getJedis();
     	
         try {
-            System.out.println(phoneNum+":  "+"contain:"+redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum));
+            System.out.println(phoneNum+":  "+"contain:"+jedis.hexists("USER_CODE_MAP",phoneNum));
             
-            if(redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum)){
-            	System.out.println( "    8888"   +redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum));
-                if (TimeUtil.timeBetween(TimeUtil.changeStringToDate(((String) redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum)).substring(4)), new Date()) / (60 * 1000) > minute){
+            if(jedis.hexists("USER_CODE_MAP",phoneNum)){
+            	System.out.println( "    8888"   +jedis.hget("USER_CODE_MAP", phoneNum));
+                if (TimeUtil.timeBetween(TimeUtil.changeStringToDate(((String) jedis.hget("USER_CODE_MAP", phoneNum)).substring(4)), new Date()) / (60 * 1000) > minute){
 
                     removePhoneCodeByPhoneNum(phoneNum);
                     return "overdue";
                 }else{
-                	String a= ((String) redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum)).substring(0,4);
+                	String a= ((String) jedis.hget("USER_CODE_MAP", phoneNum)).substring(0,4);
                     return  a;
                 }
             }
@@ -87,17 +87,18 @@ public class VerifyCodeU {
      * @return
      */
     public  String getPhoneCodeNew(String phoneNum){
-    	RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-    	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
+    	Jedis jedis=RedisClient.getJedis();
+
+    	
         try {
         
            // System.out.println("contain:"+redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum));
-            if(redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum)){
-                if (checkTime(TimeUtil.changeStringToDate(((String) redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum)).substring(4)), new Date())> 50){
+            if(jedis.hexists("USER_CODE_MAP",phoneNum)){
+                if (checkTime(TimeUtil.changeStringToDate(((String) jedis.hget("USER_CODE_MAP", phoneNum)).substring(4)), new Date())> 50){
                     removePhoneCodeByPhoneNum(phoneNum);
                     return "overdue";
                 }else{
-                    String a=((String) redisTemplate.opsForHash().get("USER_CODE_MAP", phoneNum)).substring(0,4);
+                    String a=((String) jedis.hget("USER_CODE_MAP", phoneNum)).substring(0,4);
                     return  a;
                 }
             }
@@ -130,11 +131,10 @@ public class VerifyCodeU {
      * 删除某用户的验证码Code
      */
     public  void removePhoneCodeByPhoneNum(String phoneNum) {
-    	RedisUtil redisUtil= BeanUtil.getBean("redisUtil");
-    	RedisTemplate<String, Object> redisTemplate=redisUtil.getRedisTemplate();
-        if (redisTemplate.opsForHash().hasKey("USER_CODE_MAP",phoneNum)) {
+    	Jedis jedis=RedisClient.getJedis();
+        if (jedis.hexists("USER_CODE_MAP",phoneNum)) {
         	
-        	redisTemplate.opsForHash().delete("USER_CODE_MAP","phoneNum");
+        	jedis.hdel("USER_CODE_MAP","phoneNum");
         }
     }
 

@@ -2,6 +2,8 @@ package com.bjwk.model.pojo;
 
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -37,13 +39,23 @@ public class Users {
 	private Date created; //创建时间
 	private Date updateTime; //修改个人资料时间
 
+    private List<HashMap<String,Object>> labelMap;
+	
+	
+	
 
-	
-	
-	
+	public List<HashMap<String, Object>> getLabelMap() {
+		return labelMap;
+	}
+
+	public void setLabelMap(List<HashMap<String, Object>> labelMap) {
+		this.labelMap = labelMap;
+	}
+
 	public String getBackground() {
 		return background;
 	}
+
 	public void setBackground(String background) {
 		this.background = background;
 	}
@@ -145,10 +157,8 @@ public class Users {
 	public String toString() {
 		return "Users [userId=" + userId + ", userName=" + userName + ", passWord=" + passWord + ", phone=" + phone
 				+ ", email=" + email + ", sign=" + sign + ", coin=" + coin + ", headPortrait=" + headPortrait + ", sex="
-				+ sex + ", nickName=" + nickName + "  background=" + background
-				+ ", styleSignTure=" + styleSignTure + ", gesturePassWord=" + gesturePassWord + ", gestrueIsOk="
-				+ gestrueIsOk + ", created=" + created + ", updateTime=" + updateTime + "]";
+				+ sex + ", nickName=" + nickName + ", background=" + background + ", styleSignTure=" + styleSignTure
+				+ ", gesturePassWord=" + gesturePassWord + ", gestrueIsOk=" + gestrueIsOk + ", created=" + created
+				+ ", updateTime=" + updateTime + ", labelMap=" + labelMap + "]";
 	}
-	
-	
 }

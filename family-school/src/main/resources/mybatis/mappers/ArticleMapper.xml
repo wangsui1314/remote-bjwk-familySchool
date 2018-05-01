@@ -19,6 +19,7 @@
 	<sql id="Base_insert_List">
 		article_title,article_content,article_author,article_from,create_time,category_type
 	</sql>
+	<!-- 添加文章 -->
 	<insert id="insertArticle" parameterType="com.bjwk.model.Article">
 		insert into
 		article(article_title,article_content,article_author,article_from,create_time,category_type)
@@ -31,6 +32,7 @@
 		#{categoryType})
 	</insert>
 
+	<!-- 删除指定文章 -->
 	<delete id="deleteArticleById" parameterType="int">
 		delete
 		from article
@@ -41,7 +43,7 @@
 	</delete>
 
 
-
+	<!-- 修改指定文章 -->
 	<update id="updateArticleById" parameterType="com.bjwk.model.Article">
 		update
 		article
@@ -68,24 +70,29 @@
 		</set>
 		<where>article_id = #{articleId}</where>
 	</update>
-
-	<select id="getCount" parameterType="java.lang.String" resultType="int">
+	
+	
+	<!-- 按条件查询文章数量 -->
+	<select id="getCount" parameterType="java.lang.String"
+		resultType="int">
 		select count(*)
 		from article
 		<where>
 			category_type= #{categoryType,jdbcType=VARCHAR}
 		</where>
 	</select>
-
+	<!-- 按条件查询指定文章 -->
 	<select id="findArticle" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from article
 		where category_type= #{categoryType}
-		limit ${currentNumber},${numberPerPage}
+		limit
+		${currentNumber},${numberPerPage}
 	</select>
 
+	<!-- 文章详情 -->
 	<select id="findArticleById" parameterType="int" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
@@ -94,6 +101,7 @@
 
 	</select>
 
+	<!-- 添加文章阅读量 -->
 	<update id="addBrowseVolume" parameterType="int">
 		update
 		article

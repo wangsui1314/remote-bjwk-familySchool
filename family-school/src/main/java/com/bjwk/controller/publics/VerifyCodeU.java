@@ -38,20 +38,24 @@ public class VerifyCodeU {
     public  String newPhoneCode(String phoneNum) {
     	Jedis jedis=RedisClient.getJedis();
     	
-        Random random = new Random();
-        int a = random.nextInt(8999)+1000;
-        String code = String.valueOf(a);
-        String oldCode = getPhoneCodeNew(phoneNum);
-        Date nowTime = new Date();
-        if("overdue".equals(oldCode)||"noCode".equals(oldCode)){
-        	System.out.println(code+ TimeUtil.changeDateToString(nowTime));
-        	jedis.hset("USER_CODE_MAP",phoneNum,code+TimeUtil.changeDateToString(nowTime));
-        	
-           // USER_CODE_MAP.put(phoneNum,code+ TimeUtil.changeDateToString(nowTime));
-            return code;
-        } else{
-            return null;
-        }
+       try {
+           Random random = new Random();
+           int a = random.nextInt(8999)+1000;
+           String code = String.valueOf(a);
+           String oldCode = getPhoneCodeNew(phoneNum);
+           Date nowTime = new Date();
+           if("overdue".equals(oldCode)||"noCode".equals(oldCode)){
+               System.out.println(code+ TimeUtil.changeDateToString(nowTime));
+               jedis.hset("USER_CODE_MAP",phoneNum,code+TimeUtil.changeDateToString(nowTime));
+
+               // USER_CODE_MAP.put(phoneNum,code+ TimeUtil.changeDateToString(nowTime));
+               return code;
+           } else{
+               return null;
+           }
+       }finally {
+           jedis.close();
+       }
     }
 
     public  String getPhoneCode(String phoneNum){
@@ -78,6 +82,8 @@ public class VerifyCodeU {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }finally {
+            jedis.close();
         }
     }
 
@@ -109,6 +115,8 @@ public class VerifyCodeU {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }finally {
+            jedis.close();
         }
     }
 
@@ -136,6 +144,7 @@ public class VerifyCodeU {
         	
         	jedis.hdel("USER_CODE_MAP","phoneNum");
         }
+        jedis.close();
     }
 
 }

@@ -47,17 +47,25 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 * 判断账号是否存在
 		 * insert some code
 		 */
-		if(regLoginDao.queryUserIsTrue(user.getUserName())!=null){
+		if(regLoginDao.queryUserIsTrue(user.getUserName(),null)!=null){
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			dataWrapper.setMsg("用户名已存在");
 			return dataWrapper;
 		}
-		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(user.getPhone(),code);
-		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
-			//验证码错误
-			dataWrapper.setErrorCode(codeEnum);
+		/**
+		 *同一手机号 一个角色只能注册一个（验证）
+		 */
+		if(regLoginDao.queryUserIsTrueByPhoneSign(user.getPhone(),user.getSign())!=0){
+			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
+			dataWrapper.setMsg("该手机号对应角色已存在");
 			return dataWrapper;
 		}
+//		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(user.getPhone(),code);
+//		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
+//			//验证码错误
+//			dataWrapper.setErrorCode(codeEnum);
+//			return dataWrapper;
+//		}
 		//获取默认用户昵称与性别 ...
 		Map<String,String> map=getDefaultMessage(user.getUserName(),user.getPhone());
 		user.setNickName(map.get("nickname"));
@@ -272,6 +280,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			//String token=(String) ho.get("statusLogin", userName);
 			//long state=ho.delete("loginStatus", token);  
 		}
+		jedis.close();
 		return null;
 	}
 

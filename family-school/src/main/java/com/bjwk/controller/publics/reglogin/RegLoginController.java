@@ -92,7 +92,7 @@ public class RegLoginController {
     }
 
     /**
-     * @param user
+     * @param
      * @return
      * @describe 手势密码用户登录
      */
@@ -108,7 +108,7 @@ public class RegLoginController {
     }
 
     /**
-     * @param user
+     * @param
      * @return
      * @describe 用户登出
      */
@@ -126,7 +126,7 @@ public class RegLoginController {
      *
      * @param headPortrait
      * @param sex
-     * @param professionId
+     * @param
      * @param background
      * @param styleSignTure
      * @return
@@ -161,7 +161,7 @@ public class RegLoginController {
     }
 
     /**
-     * @param user
+     * @param
      * @return
      * @describe 管理员修改用户
      */
@@ -193,7 +193,7 @@ public class RegLoginController {
 //	}
 
     /**
-     * @param user
+     * @param
      * @return
      * @describe 管理员修改用户
      */

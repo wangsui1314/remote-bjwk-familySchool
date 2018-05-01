@@ -8,7 +8,7 @@ import com.bjwk.model.pojo.Users;
 public interface RegLoginDao {
 
 	int insertReg(Users user);
-    String queryUserIsTrue(String userName);
+    String queryUserIsTrue(@Param("userName")String userName,@Param("sign")String sign);
     
     
 	Users queryPassWordIsOk(@Param("userName")String userName, @Param("passWord")String passWord,@Param("sign")String sign);
@@ -31,4 +31,6 @@ public interface RegLoginDao {
 	int insrtLable(@Param("userId")String userId, @Param("array")String[] split);
 	
 	Users  queryUserInfoDetails(@Param("userName")String userName,@Param("sign") Integer sign);
+
+	int queryUserIsTrueByPhoneSign(@Param("phone")String phone, @Param("sign")String sign);
 }

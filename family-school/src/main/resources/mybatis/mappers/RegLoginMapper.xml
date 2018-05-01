@@ -15,9 +15,22 @@
     </insert>
     
     <select id="queryUserIsTrue" resultType="String">
-     select user_name from users  where user_name =#{userName}
+     select user_name from users
+     <where>
+         <if test="userName!=null and userName!=''">
+             user_name =#{userName}
+         </if>
+         <if test="sign!=null and sign!=''">
+           and  sign =#{sign}
+         </if>
+     </where>
     </select>
-    
+
+    <select id="queryUserIsTrueByPhoneSign" resultType="int">
+        select count(1) from users where phone=#{phone} and sign=#{sign}
+    </select>
+
+
     <select id="getUserIdByUserName"  resultType="java.lang.String">
       select user_id from users where user_name=#{userName}
     </select>

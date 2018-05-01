@@ -7,7 +7,7 @@ public interface RegLoginService {
 
 	DataWrapper<Users> insertReg(Users user,String code);
 
-	DataWrapper<Users> login(String userName, String passWord);
+	DataWrapper<Users> login(String userName, String passWord,String sign);
 
 	DataWrapper<Void> logout(String token);
 

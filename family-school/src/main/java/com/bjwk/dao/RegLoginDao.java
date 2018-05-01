@@ -11,7 +11,7 @@ public interface RegLoginDao {
     String queryUserIsTrue(String userName);
     
     
-	Users queryPassWordIsOk(@Param("userName")String userName, @Param("passWord")String passWord);
+	Users queryPassWordIsOk(@Param("userName")String userName, @Param("passWord")String passWord,@Param("sign")String sign);
 	
 	Users gestureLogin(@Param("userName")String userName, @Param("gesturePassWord")String gesturePassWord);
 	

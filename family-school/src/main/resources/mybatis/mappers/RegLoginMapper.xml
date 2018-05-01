@@ -40,7 +40,7 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
     <select id="queryPassWordIsOk" resultMap="queryPassWordIsOk">
-     select * from users where user_name =#{userName} and pass_word=#{passWord}
+     select * from users where user_name =#{userName} and pass_word=#{passWord} and sign=#{sign}
     </select>
     
     <select id="gestureLogin" resultMap="queryPassWordIsOk">

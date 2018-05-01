@@ -58,10 +58,11 @@ public class RegLoginController {
 	@ResponseBody
 	public DataWrapper<Users> login(
 			@RequestParam(value="userName",required=true)String userName,
-			@RequestParam(value="passWord",required=true)String passWord
+			@RequestParam(value="passWord",required=true)String passWord,
+			@RequestParam(value="sign",required=false)String sign
 			){
 		_logger.info("用户账号登录...");
-		return regLoginService.login(userName,passWord);
+		return regLoginService.login(userName,passWord,sign);
 	}
 	
 	/**

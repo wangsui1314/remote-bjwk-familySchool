@@ -38,6 +38,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	private RegLoginDao regLoginDao;
 
 
+	@Override
 	public DataWrapper<Users> insertReg(Users user,String code) {
 		_logger.info("注册实现，接收到的数据为：User"+user.toString());
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
@@ -57,7 +58,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 			return dataWrapper;
 		}
 		//获取默认用户昵称与性别 ...
-		Map<String,String> map=getDefaultMessage(user.getUserName(),user.getPhone(),user.getSex());
+		Map<String,String> map=getDefaultMessage(user.getUserName(),user.getPhone());
 		user.setNickName(map.get("nickname"));
 		user.setHeadPortrait(map.get("headPortrait"));
 
@@ -81,13 +82,13 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		return dataWrapper;
 	}
 
-
-	public DataWrapper<Users> login(String userName, String passWord) {
+    @Override
+	public DataWrapper<Users> login(String userName, String passWord,String sign) {
 		_logger.info("用户登录实现，接收到的数据为：userName="+userName+",passWord="+passWord);
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
 
 		//检测用户账号密码是否正确
-		Users user=regLoginDao.queryPassWordIsOk(userName,passWord);
+		Users user=regLoginDao.queryPassWordIsOk(userName,passWord,sign);
 		if(user==null){
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			dataWrapper.setMsg("账号或者密码错误");
@@ -333,10 +334,10 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	 * 
 	 * @param userName
 	 * @param phone
-	 * @param sex
+	 * @param //sex
 	 * @return  Map
 	 */
-	private Map<String,String> getDefaultMessage(String userName,String phone,int sex){
+	private Map<String,String> getDefaultMessage(String userName,String phone){
 		Map<String,String> map=new HashMap<String,String>();
 		//默认昵称策略
 		int phoneLen=phone.length();
@@ -348,12 +349,12 @@ public class RegLoginServiceImpl  implements RegLoginService{
 		 * 
 		 *  ellipsis some code
 		 */
-		if(sex==0) {
-			//女
+//		if(sex==0) {
+//			//女
+//			headPortrait="http://www.rongcloud.cn/images/logo.png";
+//		}else {
 			headPortrait="http://www.rongcloud.cn/images/logo.png";
-		}else {
-			headPortrait="http://www.rongcloud.cn/images/logo.png";
-		}
+		//}
 		map.put("nickname", nickname);
 		map.put("headPortrait", headPortrait);
 		return map;

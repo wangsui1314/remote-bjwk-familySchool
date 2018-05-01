@@ -10,7 +10,7 @@
 	   <property name="locations" value="classpath:log4j.properties"/>   
 	</bean> 
 	<bean id="TokenValidateAspect" class="com.bjwk.utils.annotation.TokenValidateAspect"/>
-	
+	<bean id="MyLog" class="com.bjwk.utils.annotation.LogAspect"/>
 	
 	<bean id="exceptionResolver" class="com.bjwk.utils.exception.ExceptionHandler"/>
 	

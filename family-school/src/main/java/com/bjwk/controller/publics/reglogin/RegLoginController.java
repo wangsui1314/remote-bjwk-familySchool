@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,10 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bjwk.model.pojo.Users;
 import com.bjwk.service.publics.reglogin.RegLoginService;
 import com.bjwk.utils.DataWrapper;
-import com.bjwk.utils.annotation.TestLog;
+import com.bjwk.utils.annotation.MyLog;
 import com.bjwk.utils.annotation.TokenValidate;
-
-import java.util.HashMap;
 
 
 /**
@@ -65,6 +62,8 @@ public class RegLoginController {
      */
     @RequestMapping(value = "_login")
     @ResponseBody
+    //@MyLog(description="用户账号密码登录")
+    @MyLog(description="用户账号密码登录")
     public DataWrapper<Users> login(
             @RequestParam(value = "userName", required = true) String userName,
             @RequestParam(value = "passWord", required = true) String passWord,
@@ -149,6 +148,13 @@ public class RegLoginController {
                 , nickName);
     }
 
+    /**
+     * 
+     * @param sign
+     * @param phone
+     * @param code
+     * @return
+     */
     @RequestMapping(value = "_userUpdateToPassWord")
     @ResponseBody
     public DataWrapper<Void> userUpdateToPassWord(
@@ -206,7 +212,7 @@ public class RegLoginController {
         return regLoginService.queryUserInfoDetails(token, sign);
     }
 
-    @TestLog(name = "测试的AAAAAAAAAAAAAA")
+    @MyLog(description = "测试的AAAAAAAAAAAAAA")
     @RequestMapping(value = "/UserDemo")
     public @ResponseBody
     Object UserDemo() {

@@ -16,155 +16,165 @@ import com.bjwk.utils.DataWrapper;
 import com.bjwk.utils.annotation.TestLog;
 import com.bjwk.utils.annotation.TokenValidate;
 
+import java.util.HashMap;
 
 
 /**
  * @author liqitian
- * @describe  用户登录注册（教师，学生，家长，管理员）
- * @date 2018年2月27日 下午8:46:29 
  * @version 1.0
- * @TokenValidate 自定义注解  切面验证token是否通过 
+ * @describe 用户登录注册（教师，学生，家长，管理员）
+ * @date 2018年2月27日 下午8:46:29
+ * @TokenValidate 自定义注解  切面验证token是否通过
  */
 @Controller
 @RequestMapping("api/regLogin")
 public class RegLoginController {
-	
-	private static final Log _logger = LogFactory.getLog(RegLoginController.class);
 
-	@Autowired  
-	private RegLoginService regLoginService;
-	
-	/**
-	 * @param user
-	 * @return
-	 * @describe 用户注册
-	 */
-	@RequestMapping(value="_reg")
-	@ResponseBody
-	public DataWrapper<Users> insertReg(@ModelAttribute(value="user") Users user,
-			@RequestParam(value="code",required=true) String code
-			){
-		
-		_logger.info("进入用户注册....");
-		return regLoginService.insertReg(user,code);
-	}
-	
-	/**
-	 * @param user
-	 * @return
-	 * @describe 账号密码用户登录
-	 */
-	@RequestMapping(value="_login")
-	@ResponseBody
-	public DataWrapper<Users> login(
-			@RequestParam(value="userName",required=true)String userName,
-			@RequestParam(value="passWord",required=true)String passWord,
-			@RequestParam(value="sign",required=false)String sign
-			){
-		_logger.info("用户账号登录...");
-		return regLoginService.login(userName,passWord,sign);
-	}
-	
-	/**
-	 * 
-	 * @param sign
-	 * @param phone
-	 * @param code
-	 * @return Users
-	 */
-	@RequestMapping(value="_phoneVcodeLogin")
-	@ResponseBody
-	public DataWrapper<Users> phoneVcodeLogin(
-			@RequestParam(value="sign",required=true)Integer sign,
-			@RequestParam(value="phone",required=true)String phone,
-			@RequestParam(value="code",required=true)String code
-			){
-		_logger.info("手机验证码登录...");
-		return regLoginService.phoneVcodeLogin(phone,code,sign);
-	}
-	/**
-	 * @param user
-	 * @return
-	 * @describe 手势密码用户登录
-	 */
-	@RequestMapping(value="_gestureLogin")
-	@ResponseBody
-	public DataWrapper<Users> gestureLogin(
-			@RequestParam(value="token",required=true)String token,
-			@RequestParam(value="gesturePassWord",required=true)String gesturePassWord
-			){
-		_logger.info("用户登录...");
+    private static final Log _logger = LogFactory.getLog(RegLoginController.class);
 
-		return regLoginService.gestureLogin(token,gesturePassWord);
-	}
+    @Autowired
+    private RegLoginService regLoginService;
 
-	/**
-	 * 
-	 * @param user
-	 * @return
-	 * @describe 用户登出
-	 */
-	@RequestMapping(value="_logout")
-	@ResponseBody
-	public DataWrapper<Void> logout(
-			@RequestParam(value="token",required=true)String token
-			){
-		_logger.info("用户登出...");
-		return regLoginService.logout(token);
-	}
-	/**
-	 * 用户更改个人信息..
-	 * @param headPortrait
-	 * @param sex
-	 * @param professionId
-	 * @param background
-	 * @param styleSignTure
-	 * @return
-	 */
-	@RequestMapping(value="_changeUserInfo")
-	@ResponseBody
-	@TokenValidate
-	public DataWrapper<Void> changeUserInfo(
-			@RequestParam(value="token",required=false)String token,
-			@RequestParam(value="headPortrait",required=false)String headPortrait,
-			@RequestParam(value="sex",required=false)String sex,
-			@RequestParam(value="nickName",required=false) String nickName,
-			@RequestParam(value="lableId",required=false)String lableId,//入参格式  1,2,3,4,5,7,12
-			@RequestParam(value="background",required=false)String background,
-			@RequestParam(value="styleSignTure",required=false)String styleSignTure
-			){
-		_logger.info("用户更改个人信息...");
-		System.out.println(styleSignTure);//Connector标签增加useBodyEncodingForURI="true"
-		return regLoginService.changeUserInfo(token,headPortrait,sex,lableId,background,styleSignTure
-				,nickName);
-	}
-	
-	@RequestMapping(value="_userUpdateToPassWord")
-	@ResponseBody
-	public DataWrapper<Void> userUpdateToPassWord(
-			@RequestParam(value="sign",required=false)String sign,
-			@RequestParam(value="phone",required=false)String phone,
-			@RequestParam(value="code",required=false)String code
-			){
-		_logger.info("用户更改个人密码...");
-		return regLoginService.userUpdateToPassWord(sign,phone,code);
-	}
-	/**
-	 *
-	 * @param user
-	 * @return
-	 * @describe 管理员修改用户
-	 */
-	@RequestMapping(value="_updateUser")
-	@ResponseBody
-	public DataWrapper<Void> _updateUser(
+    /**
+     * @param
+     * @return
+     * @describe 用户注册
+     */
+    @RequestMapping(value = "_reg")
+    @ResponseBody
+    public DataWrapper<Users> insertReg(
+            @RequestParam(value = "userName", required = true) String userName,
+            @RequestParam(value = "passWord", required = true) String passWord,
+            @RequestParam(value = "sign", required = true) String sign,
+            @RequestParam(value = "phone", required = true) String phone,
+            @RequestParam(value = "code", required = true) String code
+    ) {
+        _logger.info("进入用户注册....");
+        Users user = new Users();
+        user.setUserName(userName);
+        user.setPassWord(passWord);
+        user.setSign(sign);
+        user.setPhone(phone);
+        return regLoginService.insertReg(user,code);
+    }
+
+    /**
+     * @param
+     * @return
+     * @describe 账号密码用户登录
+     */
+    @RequestMapping(value = "_login")
+    @ResponseBody
+    public DataWrapper<Users> login(
+            @RequestParam(value = "userName", required = true) String userName,
+            @RequestParam(value = "passWord", required = true) String passWord,
+            @RequestParam(value = "sign", required = false) String sign
+    ) {
+        _logger.info("用户账号登录...");
+        return regLoginService.login(userName, passWord, sign);
+    }
+
+    /**
+     * @param sign
+     * @param phone
+     * @param code
+     * @return Users
+     */
+    @RequestMapping(value = "_phoneVcodeLogin")
+    @ResponseBody
+    public DataWrapper<Users> phoneVcodeLogin(
+            @RequestParam(value = "sign", required = true) Integer sign,
+            @RequestParam(value = "phone", required = true) String phone,
+            @RequestParam(value = "code", required = true) String code
+    ) {
+        _logger.info("手机验证码登录...");
+        return regLoginService.phoneVcodeLogin(phone, code, sign);
+    }
+
+    /**
+     * @param user
+     * @return
+     * @describe 手势密码用户登录
+     */
+    @RequestMapping(value = "_gestureLogin")
+    @ResponseBody
+    public DataWrapper<Users> gestureLogin(
+            @RequestParam(value = "token", required = true) String token,
+            @RequestParam(value = "gesturePassWord", required = true) String gesturePassWord
+    ) {
+        _logger.info("用户登录...");
+
+        return regLoginService.gestureLogin(token, gesturePassWord);
+    }
+
+    /**
+     * @param user
+     * @return
+     * @describe 用户登出
+     */
+    @RequestMapping(value = "_logout")
+    @ResponseBody
+    public DataWrapper<Void> logout(
+            @RequestParam(value = "token", required = true) String token
+    ) {
+        _logger.info("用户登出...");
+        return regLoginService.logout(token);
+    }
+
+    /**
+     * 用户更改个人信息..
+     *
+     * @param headPortrait
+     * @param sex
+     * @param professionId
+     * @param background
+     * @param styleSignTure
+     * @return
+     */
+    @RequestMapping(value = "_changeUserInfo")
+    @ResponseBody
+    @TokenValidate
+    public DataWrapper<Void> changeUserInfo(
+            @RequestParam(value = "token", required = false) String token,
+            @RequestParam(value = "headPortrait", required = false) String headPortrait,
+            @RequestParam(value = "sex", required = false) String sex,
+            @RequestParam(value = "nickName", required = false) String nickName,
+            @RequestParam(value = "lableId", required = false) String lableId,//入参格式  1,2,3,4,5,7,12
+            @RequestParam(value = "background", required = false) String background,
+            @RequestParam(value = "styleSignTure", required = false) String styleSignTure
+    ) {
+        _logger.info("用户更改个人信息...");
+        System.out.println(styleSignTure);//Connector标签增加useBodyEncodingForURI="true"
+        return regLoginService.changeUserInfo(token, headPortrait, sex, lableId, background, styleSignTure
+                , nickName);
+    }
+
+    @RequestMapping(value = "_userUpdateToPassWord")
+    @ResponseBody
+    public DataWrapper<Void> userUpdateToPassWord(
+            @RequestParam(value = "sign", required = false) String sign,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "code", required = false) String code
+    ) {
+        _logger.info("用户更改个人密码...");
+        return regLoginService.userUpdateToPassWord(sign, phone, code);
+    }
+
+    /**
+     * @param user
+     * @return
+     * @describe 管理员修改用户
+     */
+    @RequestMapping(value = "_updateUser")
+    @ResponseBody
+    public DataWrapper<Void> _updateUser(
 //			@RequestParam(value="token",required=true)String token
-			){
-		int i=1;
-		int x=2;
-		i=x/0;
-		return null;
-	}
+    ) {
+        int i = 1;
+        int x = 2;
+        i = x / 0;
+        return null;
+    }
 //	@RequestMapping("_test")
 //	@ResponseBody
 //	public DataWrapper<Void> test(
@@ -181,26 +191,26 @@ public class RegLoginController {
 //		dataWrapper.setMsg("1234");
 //		return  dataWrapper;
 //	}
-	
-	/**
-	 *
-	 * @param user
-	 * @return
-	 * @describe 管理员修改用户
-	 */
-	@RequestMapping(value="_queryUserInfoDetails")
-	@ResponseBody
-	public DataWrapper<Users> queryUserInfoDetails(
-			@RequestParam(value="token",required=false)String token,
-			@RequestParam(value="sign",required=false)Integer sign
-			){
-		return regLoginService.queryUserInfoDetails(token,sign);
-	}
-	
-	  @TestLog(name = "测试的AAAAAAAAAAAAAA")  
-	  @RequestMapping(value = "/UserDemo")  
-	  public @ResponseBody Object UserDemo() {
-		return null;
-	  }  
+
+    /**
+     * @param user
+     * @return
+     * @describe 管理员修改用户
+     */
+    @RequestMapping(value = "_queryUserInfoDetails")
+    @ResponseBody
+    public DataWrapper<Users> queryUserInfoDetails(
+            @RequestParam(value = "token", required = false) String token,
+            @RequestParam(value = "sign", required = false) Integer sign
+    ) {
+        return regLoginService.queryUserInfoDetails(token, sign);
+    }
+
+    @TestLog(name = "测试的AAAAAAAAAAAAAA")
+    @RequestMapping(value = "/UserDemo")
+    public @ResponseBody
+    Object UserDemo() {
+        return null;
+    }
 
 }

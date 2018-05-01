@@ -42,6 +42,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	public DataWrapper<Users> insertReg(Users user,String code) {
 		_logger.info("注册实现，接收到的数据为：User"+user.toString());
 		DataWrapper<Users> dataWrapper=new DataWrapper<Users>();
+
 		/** 
 		 * 判断账号是否存在
 		 * insert some code
@@ -146,6 +147,7 @@ public class RegLoginServiceImpl  implements RegLoginService{
 	/**
 	 * 登出
 	 */
+	@Override
 	public DataWrapper<Void> logout(String token) {
 		// TODO Auto-generated method stub
 		DataWrapper<Void> dataWrapper=new DataWrapper<Void>();

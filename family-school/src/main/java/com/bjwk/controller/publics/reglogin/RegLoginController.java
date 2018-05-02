@@ -1,6 +1,7 @@
 package com.bjwk.controller.publics.reglogin;
 
 
+import com.bjwk.utils.annotation.AdminTokenValidate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import com.bjwk.utils.annotation.TokenValidate;
  * @describe 用户登录注册（教师，学生，家长，管理员）
  * @date 2018年2月27日 下午8:46:29
  * @TokenValidate 自定义注解  切面验证token是否通过
+ * @AdminTokenValidate 自定义注解 验证管理员操作权限（简略）
+ * @MyLog 自定义注解 统一日志处理
  */
 @Controller
 @RequestMapping("api/regLogin")
@@ -30,6 +33,7 @@ public class RegLoginController {
     private static final Log _logger = LogFactory.getLog(RegLoginController.class);
 
     @Autowired
+
     private RegLoginService regLoginService;
 
     /**
@@ -149,7 +153,7 @@ public class RegLoginController {
     }
 
     /**
-     * 
+     *
      * @param sign
      * @param phone
      * @param code

@@ -66,7 +66,6 @@ public class RegLoginController {
      */
     @RequestMapping(value = "_login")
     @ResponseBody
-    //@MyLog(description="用户账号密码登录")
     @MyLog(description="用户账号密码登录")
     public DataWrapper<Users> login(
             @RequestParam(value = "userName", required = true) String userName,

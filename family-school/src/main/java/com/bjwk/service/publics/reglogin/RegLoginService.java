@@ -17,11 +17,12 @@ public interface RegLoginService {
 
 
 
-	DataWrapper<Void> userUpdateToPassWord(String sign, String phone, String code);
+	DataWrapper<String> userUpdateToPassWordCheck(Integer sign, String phone, String code);
 
 	DataWrapper<Void> changeUserInfo(String token, String headPortrait, String sex, String professionId,
 			String background, String styleSignTure, String nickName);
 
 	DataWrapper<Users> queryUserInfoDetails(String token,Integer sign);
 
+	DataWrapper<Void> userUpdateToPassWord(String passWdVoucher,String newPassWd);
 }

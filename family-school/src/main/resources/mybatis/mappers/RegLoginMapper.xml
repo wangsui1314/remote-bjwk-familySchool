@@ -135,4 +135,18 @@
       left join lable lable on userlable.labe_id=lable.id
       where user.user_name=#{userName} and user.sign=#{sign}
     </select>
+
+    <!--用户更改密码验证阶段-->
+    <select id="updateUserPassWord" resultType="int">
+        select count(1) from users where phone=#{phone} and sign=#{sign}
+    </select>
+
+    <!--更改密码-->
+    <update id="userUpdateToPassWord">
+        update users set
+        pass_word=#{newPassWd}
+        where
+        user_name=#{userName} and sign=#{sign}
+    </update>
+
 </mapper>       

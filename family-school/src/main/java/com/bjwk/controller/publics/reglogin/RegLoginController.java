@@ -96,7 +96,7 @@ public class RegLoginController {
     /**
      * @param
      * @return
-     * @describe 手势密码用户登录
+     * @describe 手势密码用户验证
      */
     @RequestMapping(value = "_gestureLogin")
     @ResponseBody
@@ -150,23 +150,40 @@ public class RegLoginController {
         return regLoginService.changeUserInfo(token, headPortrait, sex, lableId, background, styleSignTure
                 , nickName);
     }
-
     /**
-     *
-     * @param sign
-     * @param phone
-     * @param code
-     * @return
+     * @Description: 主要获取更改密码凭证
+     * @Param: [sign, phone, code]
+     * @return: com.bjwk.utils.DataWrapper<java.lang.String>
+     * @Author: liqitian
+     * @Date: 2018/6/14
      */
-    @RequestMapping(value = "_userUpdateToPassWord")
+    @RequestMapping(value = "_userUpdateToPassWordCheck")
     @ResponseBody
-    public DataWrapper<Void> userUpdateToPassWord(
-            @RequestParam(value = "sign", required = false) String sign,
+    public DataWrapper<String> _userUpdateToPassWordCheck(
+            @RequestParam(value = "sign", required = false) Integer sign,
             @RequestParam(value = "phone", required = false) String phone,
             @RequestParam(value = "code", required = false) String code
     ) {
+        _logger.info("用户更改个人密码验证...");
+        return regLoginService.userUpdateToPassWordCheck(sign, phone, code);
+    }
+
+
+    /**
+     * @Description:开始更改密码
+     * @Param: [passWdVoucher]
+     * @return: com.bjwk.utils.DataWrapper<java.lang.Void>
+     * @Author: liqitian
+     * @Date: 2018/6/14
+     */
+    @RequestMapping(value = "_userUpdateToPassWord")
+    @ResponseBody
+    public DataWrapper<Void> _userUpdateToPassWord(
+            @RequestParam(value = "passWdVoucher", required = true) String passWdVoucher,
+            @RequestParam(value = "newPassWd", required = true) String newPassWd
+    ) {
         _logger.info("用户更改个人密码...");
-        return regLoginService.userUpdateToPassWord(sign, phone, code);
+        return regLoginService.userUpdateToPassWord(passWdVoucher,newPassWd);
     }
 
     /**
@@ -204,7 +221,7 @@ public class RegLoginController {
     /**
      * @param
      * @return
-     * @describe 管理员修改用户
+     * @describe 用户个人详情
      */
     @RequestMapping(value = "_queryUserInfoDetails")
     @ResponseBody
@@ -214,6 +231,8 @@ public class RegLoginController {
     ) {
         return regLoginService.queryUserInfoDetails(token, sign);
     }
+
+
 
     @MyLog(description = "测试的AAAAAAAAAAAAAA")
     @RequestMapping(value = "/UserDemo")

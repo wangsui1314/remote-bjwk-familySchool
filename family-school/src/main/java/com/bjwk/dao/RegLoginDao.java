@@ -23,7 +23,7 @@ public interface RegLoginDao {
 			@Param("background")String background, @Param("styleSignTure")String styleSignTure,
 			@Param("userName")String userName);
 	
-	int updateUserPassWord(@Param("sign")String sign, @Param("phone")String phone);
+	String userUpdateToPassWordCheck(@Param("sign")Integer sign, @Param("phone")String phone);
 	
 	String getUserIdByUserName(@Param("userName")String userName);
 	
@@ -33,4 +33,6 @@ public interface RegLoginDao {
 	Users  queryUserInfoDetails(@Param("userName")String userName,@Param("sign") Integer sign);
 
 	int queryUserIsTrueByPhoneSign(@Param("phone")String phone, @Param("sign")String sign);
+
+	int userUpdateToPassWord(@Param("userName")String param, @Param("sign")String param1, @Param("newPassWd")String newPassWd);
 }

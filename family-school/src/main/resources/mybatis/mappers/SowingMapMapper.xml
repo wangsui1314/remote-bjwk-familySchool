@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjwk.dao.SowingMapDao">
+
+      <!--轮播图插入-->
+      <insert id="insertSowingMap">
+          insert into sowing_map(imageUrl,type,isEnable)
+          values
+          (#{imageUrl},#{type},#{isEnable})
+      </insert>
+      <!--轮播图查询-->
+      <select id="querySowingMapList" resultType="java.lang.String">
+          select imageUrl from sowing_map
+          where
+          type=#{type} and isEnable=1
+      </select>
+
+        <!--后台轮播图查询-->
+      <select id="querySowingMapListToBackstage" resultType="map">
+          select * from sowing_map
+         where
+              <if test="type != null">
+                  type=${type} and
+              </if>
+              <if test="isEnable != null">
+                   isEnable=${isEnable}
+              </if>
+          order by  createTime desc
+      </select>
+
+       <!--后台轮播图是否启用操作-->
+        <update id="updatEnableOper">
+            update sowing_map set isEnable =#{isEnable}
+            where
+            id=#{id}
+        </update>
+</mapper>       

@@ -46,12 +46,19 @@ public class RegLoginServiceImpl implements RegLoginService {
         DataWrapper<Users> dataWrapper = new DataWrapper<Users>();
 
         /**
-         * 判断账号是否存在
+         * 判断账号是否存在和正确性  用户名限制 7位以上 不包括七位
          * insert some code
          */
-        if (regLoginDao.queryUserIsTrue(user.getUserName(), null) != null) {
+        String userName=user.getUserName();
+        if (regLoginDao.queryUserIsTrue(userName, null) != null||userName.length()<=7) {
             dataWrapper.setCallStatus(CallStatusEnum.FAILED);
-            dataWrapper.setMsg("用户名已存在");
+            dataWrapper.setMsg("用户名已存在或用户名长度异常，用户名必须大于七位不包括七位");
+            return dataWrapper;
+        }
+        //密码长度验证
+        if(user.getPassWord().length()<=7){
+            dataWrapper.setMsg("密码必须大于七位不包括七位");
+            dataWrapper.setCallStatus(CallStatusEnum.FAILED);
             return dataWrapper;
         }
         /**
@@ -62,12 +69,12 @@ public class RegLoginServiceImpl implements RegLoginService {
             dataWrapper.setMsg("该手机号对应角色已存在");
             return dataWrapper;
         }
-//		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(user.getPhone(),code);
-//		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
-//			//验证码错误
-//			dataWrapper.setErrorCode(codeEnum);
-//			return dataWrapper;
-//		}
+		ErrorCodeEnum codeEnum= VerifiCodeValidateUtil.verifiCodeValidate(user.getPhone(),code);
+		if(!codeEnum.equals(ErrorCodeEnum.No_Error)){
+			//验证码错误
+			dataWrapper.setErrorCode(codeEnum);
+			return dataWrapper;
+		}
         //获取默认用户昵称与性别 ...
         Map<String, String> map = getDefaultMessage(user.getUserName(), user.getPhone());
         user.setNickName(map.get("nickname"));

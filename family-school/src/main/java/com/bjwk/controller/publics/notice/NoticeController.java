@@ -21,7 +21,7 @@ import com.bjwk.utils.DataWrapper;
 * @version 1.0  
 */
 @Controller
-@RequestMapping("api/public/notice")
+@RequestMapping("/api/public/notice")
 public class NoticeController {
 	
 	private static final Log _logger = LogFactory.getLog(NoticeController.class);
@@ -38,6 +38,7 @@ public class NoticeController {
 	}
 
 	@RequestMapping("_noticeDetails")
+	@ResponseBody
 	public DataWrapper<NoticeEntity> findNoticeDetails(int noticeId){
 		_logger.info("获取公告详情"+noticeId);
 		DataWrapper<NoticeEntity> dataWrapper = new DataWrapper<NoticeEntity>();

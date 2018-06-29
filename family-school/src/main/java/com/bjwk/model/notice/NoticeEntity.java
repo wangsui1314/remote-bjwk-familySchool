@@ -4,13 +4,6 @@ import com.bjwk.model.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.xml.soap.Text;
-import java.util.Date;
-
 /**
  * @Description :
  * @Author : wangsui
@@ -31,7 +24,7 @@ public class NoticeEntity extends BaseEntity {
     /**
      * 公告内容
      **/
-    private Text noticeContent;
+    private String noticeContent;
 
     /**
      * 公告浏览量

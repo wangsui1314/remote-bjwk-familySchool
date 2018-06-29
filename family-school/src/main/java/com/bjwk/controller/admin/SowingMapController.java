@@ -3,6 +3,7 @@ package com.bjwk.controller.admin;
 import com.bjwk.service.admin.SowingMapService;
 import com.bjwk.utils.DataWrapper;
 import com.bjwk.utils.annotation.AdminTokenValidate;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,7 +72,7 @@ public class SowingMapController {
     @RequestMapping(value="_querySowingMapListToBackstage")
     @ResponseBody
     @AdminTokenValidate
-    public DataWrapper<List<HashMap<String,Object>>> querySowingMapListToBackstage(
+    public  DataWrapper<PageInfo<HashMap<String,Object>>> querySowingMapListToBackstage(
             @RequestParam(value="type",required=false) Integer type,
             @RequestParam(value="isEnable",required=false) Integer isEnable
     ){
@@ -94,4 +95,28 @@ public class SowingMapController {
     ){
         return imagesManageService.updatEnableOper(id,isEnable);
     }
+
+    /**
+     * @Description:题库列表展示测试
+     * @Param: []
+     * @return: com.bjwk.utils.DataWrapper<java.lang.Void>
+     * @Author: liqitian
+     * @Date: 2018/6/20
+     */
+    @RequestMapping(value="_test")
+    @ResponseBody
+    @AdminTokenValidate
+    public DataWrapper<List<HashMap<String,Object>>> test(
+    ){
+        return imagesManageService.test();
+    }
+    /**
+     * > set
+     * global  time_zone = '+8:00'; ##修改mysql全局时区为北京时间，即我们所在的东8区
+     *
+     * > set
+     * time_zone = '+8:00'; ##修改当前会话时区
+     *
+     * > flush privileges; #立即生效
+     */
 }

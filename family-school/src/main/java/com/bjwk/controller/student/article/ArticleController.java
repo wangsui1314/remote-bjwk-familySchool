@@ -2,6 +2,7 @@ package com.bjwk.controller.student.article;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class ArticleController {
 	 */
 	@RequestMapping(value="_findArticle")
 	@ResponseBody
-	public DataWrapper<List<Article>> findArticle(int gradeId,int typeId,int numberPerPage,int currentPage){
+	public DataWrapper<PageInfo<Article>> findArticle(int gradeId, int typeId, int numberPerPage, int currentPage){
 		_logger.info("查询指定条件的所有美文");
 		_logger.info("查询年级id为："+gradeId+"，类型id为："+typeId+"的所有美文");
 		String categoryType = gradeId+","+typeId;

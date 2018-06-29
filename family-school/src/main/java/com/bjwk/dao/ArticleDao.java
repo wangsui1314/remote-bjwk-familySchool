@@ -14,7 +14,7 @@ import com.bjwk.model.Article;
 */
 public interface ArticleDao {
 	
-	List<Article> findArticle(@Param("categoryType") String categoryType,@Param("currentNumber") int currentNumber,@Param("numberPerPage") int numberPerPage);
+	List<Article> findArticle(@Param("categoryType") String categoryType);
 	
 	Article findArticleById(int articleId);
 

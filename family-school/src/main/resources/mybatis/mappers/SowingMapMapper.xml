@@ -20,13 +20,14 @@
         <!--后台轮播图查询-->
       <select id="querySowingMapListToBackstage" resultType="map">
           select * from sowing_map
-         where
+         <where>
               <if test="type != null">
                   type=${type} and
               </if>
               <if test="isEnable != null">
                    isEnable=${isEnable}
               </if>
+         </where>
           order by  createTime desc
       </select>
 
@@ -36,4 +37,8 @@
             where
             id=#{id}
         </update>
+
+        <select id="test" resultType="map">
+            select * from  question_bank
+        </select>
 </mapper>       

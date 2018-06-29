@@ -1,8 +1,11 @@
 package com.bjwk.service.impl.student;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,30 +39,25 @@ public class ArticleServiceImpl implements ArticleService{
 
 	/**
 	 * 查询美文阅读实现方法
-	 * @param type 类型
+	 * @param categoryType 类型
 	 */
 	@Override
-	public DataWrapper<List<Article>> findArticle(String categoryType,int numberPerPage,int currentPage) {
+	public DataWrapper<PageInfo<Article>> findArticle(String categoryType,int numberPerPage,int currentPage) {
 		_logger.info("根据"+categoryType+"查询相关美文");
-		DataWrapper<List<Article>> dataWrapper = new DataWrapper<List<Article>>();
+		DataWrapper<PageInfo<Article>> dataWrapper = new DataWrapper<PageInfo<Article>>();
 		if(numberPerPage<=0 || currentPage<=0){
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			dataWrapper.setMsg("传递的数据有误");
 			return dataWrapper;
 		}
-		Page page=new Page();
-		page.setNumberPerPage(numberPerPage);
-		page.setCurrentPage(currentPage);
-		page.setCurrentPage(currentPage);
-		List<Article> articleList = articleDao.findArticle(categoryType,page.getCurrentNumber(),page.getNumberPerPage());
-		int totalNumber=articleDao.getCount(categoryType);
-		System.out.println(totalNumber);
+		PageHelper.startPage(currentPage, numberPerPage);
+		List<Article> articleList = articleDao.findArticle(categoryType);
 		if(!articleList.isEmpty()){
 			dataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
 			dataWrapper.setMsg("查询成功");
-			dataWrapper.setData(articleList);
-			
-			dataWrapper.setPage(page, totalNumber);
+			//dataWrapper.setData(articleList);
+			PageInfo<Article> page = new PageInfo<Article>(articleList);
+			dataWrapper.setData(page);
 		}else {
 			dataWrapper.setCallStatus(CallStatusEnum.FAILED);
 			dataWrapper.setMsg("暂未有该数据");
@@ -114,7 +112,7 @@ public class ArticleServiceImpl implements ArticleService{
 
 	/**
 	 * 修改美文
-	 * @param articleId 美文Id
+	 * @param article 美文Id
 	 */
 	@Override
 	public DataWrapper<Boolean> updateArticle(Article article) {

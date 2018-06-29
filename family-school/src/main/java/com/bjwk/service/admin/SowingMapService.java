@@ -1,6 +1,7 @@
 package com.bjwk.service.admin;
 
 import com.bjwk.utils.DataWrapper;
+import com.github.pagehelper.PageInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,9 @@ public interface SowingMapService {
 
     DataWrapper<List<String>> querySowingMapList(Integer type);
 
-    DataWrapper<List<HashMap<String,Object>>>  querySowingMapListToBackstage(Integer type,Integer isEnable);
+    DataWrapper<PageInfo<HashMap<String,Object>>>  querySowingMapListToBackstage(Integer type, Integer isEnable);
 
     DataWrapper<Void> updatEnableOper(Integer id, Integer isEnable);
+
+    DataWrapper<List<HashMap<String,Object>>> test();
 }

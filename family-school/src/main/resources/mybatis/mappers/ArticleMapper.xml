@@ -32,6 +32,7 @@
 		#{categoryType})
 	</insert>
 
+
 	<!-- 删除指定文章 -->
 	<delete id="deleteArticleById" parameterType="int">
 		delete
@@ -88,8 +89,7 @@
 		<include refid="Base_Column_List" />
 		from article
 		where category_type= #{categoryType}
-		limit
-		${currentNumber},${numberPerPage}
+
 	</select>
 
 	<!-- 文章详情 -->

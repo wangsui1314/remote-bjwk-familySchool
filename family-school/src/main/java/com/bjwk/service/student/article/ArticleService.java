@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bjwk.model.Article;
 import com.bjwk.utils.DataWrapper;
+import com.github.pagehelper.PageInfo;
 
 /** 
 * @Description: 美文阅读实现类接口
@@ -14,7 +15,7 @@ import com.bjwk.utils.DataWrapper;
 */
 public interface ArticleService {
 	
-	public DataWrapper<List<Article>> findArticle(String categoryType,int numberPerPage,int currentPage);
+	public DataWrapper<PageInfo<Article>> findArticle(String categoryType, int numberPerPage, int currentPage);
 
 	public DataWrapper<Article> getArticleDetails(int articleId);
 	

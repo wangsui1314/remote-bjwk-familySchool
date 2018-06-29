@@ -14,4 +14,6 @@ public interface SowingMapDao {
     List<HashMap<String,Object>> querySowingMapListToBackstage(@Param("type")Integer type,@Param("isEnable")Integer isEnable);
 
     int updatEnableOper(@Param("id")Integer id, @Param("isEnable")Integer isEnable);
+
+    List<HashMap<String,Object>> test();
 }

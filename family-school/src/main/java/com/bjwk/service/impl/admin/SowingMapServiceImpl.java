@@ -4,6 +4,8 @@ import com.bjwk.dao.SowingMapDao;
 import com.bjwk.service.admin.SowingMapService;
 import com.bjwk.utils.CallStatusEnum;
 import com.bjwk.utils.DataWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,17 +71,17 @@ public class SowingMapServiceImpl implements SowingMapService {
      * @Date: 2018/6/20
      */
     @Override
-    public DataWrapper<List<HashMap<String,Object>>> querySowingMapListToBackstage(Integer type,Integer isEnable) {
-        DataWrapper<List<HashMap<String,Object>>> dataWrapper=new DataWrapper<List<HashMap<String,Object>>>();
+    public  DataWrapper<PageInfo<HashMap<String,Object>>> querySowingMapListToBackstage(Integer type,Integer isEnable) {
+        DataWrapper<PageInfo<HashMap<String,Object>>> dataWrapper=new DataWrapper<PageInfo<HashMap<String,Object>>>();
         //pageHelper someCode
         System.out.println(isEnable);
+        PageHelper.startPage(1, 10);
         List<HashMap<String,Object>> sowingMapList=sowingMapDao.querySowingMapListToBackstage(type,isEnable);
 
-        if(sowingMapList!=null&&!sowingMapList.isEmpty()){
-            dataWrapper.setData(sowingMapList);
-        }else{
-            dataWrapper.setData(new ArrayList<HashMap<String,Object>>());
-        }
+        PageInfo<HashMap<String,Object>> page = new PageInfo<HashMap<String,Object>>(sowingMapList);
+        //测试PageInfo全部属性
+        System.out.println(page.toString());
+        dataWrapper.setData(page);
         return dataWrapper;
     }
 
@@ -98,6 +100,13 @@ public class SowingMapServiceImpl implements SowingMapService {
             return dataWrapper;
         }
         dataWrapper.setMsg("修改成功");
+        return dataWrapper;
+    }
+
+    @Override
+    public DataWrapper<List<HashMap<String,Object>>> test() {
+        DataWrapper<List<HashMap<String,Object>>> dataWrapper=new DataWrapper<List<HashMap<String, Object>>>();
+        dataWrapper.setData(sowingMapDao.test());
         return dataWrapper;
     }
 

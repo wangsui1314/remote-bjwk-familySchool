@@ -1,8 +1,6 @@
 package com.bjwk.utils;
 
-/**
- * Created by XiaoJiang01 on 2017/5/12.
- */
+
 public class Page {
    private Integer numberPerPage;//每页显示数量
     private Integer currentPage;//当前页

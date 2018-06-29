@@ -18,20 +18,18 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@MappedSuperclass
+//@MappedSuperclass
 @EntityListeners(BaseEntityListener.class)
 public abstract class BaseEntity implements Serializable {
 
     /**
      * 首次插入时间
      */
-    @Column(name = "create_time", nullable = false, columnDefinition = "DATE COMMENT '插入时间'")
     protected Date createTime;
 
     /**
      * 最后修改时间
      */
-    @Column(name = "update_time", columnDefinition = "DATE COMMENT '最后修改时间'")
     protected Date updateTime;
 
 

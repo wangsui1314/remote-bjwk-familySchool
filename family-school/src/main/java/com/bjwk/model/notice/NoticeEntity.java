@@ -19,30 +19,23 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@Entity
-@Table(name="notice")
 public class NoticeEntity extends BaseEntity {
 
-    @Id
-    @Column(name="notice_id")
     private int noticeId;
 
     /**
      * 公告名称
      **/
-    @Column(name = "notice_name")
     private String noticeName;
 
     /**
      * 公告内容
      **/
-    @Column(name = "notice_content")
     private Text noticeContent;
 
     /**
      * 公告浏览量
      **/
-    @Column(name = "browse_volume")
     private int browseVolume;
 
 }

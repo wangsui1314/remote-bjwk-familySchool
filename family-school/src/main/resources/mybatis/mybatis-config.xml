@@ -16,16 +16,16 @@
         <setting name="callSettersOnNulls" value="true"/>
          <!--<setting name="logImpl" value="LOG4J" />    -->
         <!--<setting name="logImpl" value="STDOUT_LOGGING"/>-->
-		
+
+
 	</settings>
 	<typeAliases>
         <package name="com.yayiabc.http.mvc.pojo.jpa"/>
         <package name="com.yayiabc.http.mvc.pojo.model"/>
         <package name="com.yayiabc.http.mvc.pojo.log"/>
     </typeAliases>
-    
 
-	
+
 	<plugins>
 
     <!-- com.github.pagehelper为PageHelper类所在包名 -->

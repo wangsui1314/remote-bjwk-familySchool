@@ -16,8 +16,6 @@ import redis.clients.jedis.Jedis;
 
 public class Subscriber extends Thread{
 
-//	@Autowired 
-//	private Xxxxx  xxxx;
 	
 	public  void afterPropertiesSet() {
 		/**
@@ -28,7 +26,7 @@ public class Subscriber extends Thread{
     
     @Override
 	public void run(){
-    	System.out.println("监听key值失效启动....__keyevent@1__:expired");
+    	System.err.println("监听key值失效启动....__keyevent@1__:expired");
 		Jedis jedis= RedisClient.getJedis();
 		/**
 		 * psubscribe阻塞方法 所以需要启线程
